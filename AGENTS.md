@@ -35,6 +35,8 @@ Pages must be served over http; opening the files directly fails because the shi
 ```
 AGENTS.md                 this guide
 CLAUDE.md                 pointer to this guide
+index.html                landing page for GitHub Pages, links to the two pages below
+.nojekyll                 tells GitHub Pages to serve files as-is (no Jekyll build)
 data/games-2x2.json       the 144 games: the single source of truth for game facts
 tools/generate_games.py   builds the data from first principles + transcribed names; asserts invariants
 tools/embed_tori_data.py  copies a compact version of the data into the 3D page
