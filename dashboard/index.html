@@ -1,0 +1,1243 @@
+<style>
+.tg{--tg-row:#d6453a;--tg-col:#3767d6;--tg-tile:3px;--tg-quad:12px;--tg-ink:#1c1c1c;container-type:inline-size;font-family:var(--font-anthropic-sans);color:var(--color-fg)}
+.tg-head{margin-bottom:var(--cds-gap-sm)}
+.tg-title{font-family:var(--font-anthropic-serif);font-weight:400;font-size:var(--cds-font-size-title);margin:0;line-height:1.15}
+.tg-lede{margin:var(--cds-gap-xs) 0 0;color:var(--color-fg-muted);font-size:var(--cds-font-size-body);max-width:72ch;line-height:1.5}
+.tg-controls{display:flex;flex-wrap:wrap;gap:var(--cds-gap-sm) var(--cds-gap-lg);align-items:center;margin:var(--cds-gap-md) 0}
+.tg-ctl{display:flex;flex-wrap:wrap;align-items:center;gap:var(--cds-gap-sm);font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.tg-seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);overflow:hidden}
+.tg-seg button{font:inherit;font-size:var(--cds-font-size-caption);color:var(--color-fg);background:transparent;border:0;border-right:1px solid var(--color-border-line);padding:var(--cds-pad-xs) var(--cds-pad-sm);cursor:pointer}
+.tg-seg button:last-child{border-right:0}
+.tg-seg button[aria-pressed="true"]{background:var(--color-fg);color:var(--color-bg)}
+.tg-seg button:focus-visible,.tg-lg-item:focus-visible,.tg-nb:focus-visible,.tg-chipbtn:focus-visible{outline:2px solid var(--tg-col);outline-offset:2px}
+.tg-search{font:inherit;font-size:var(--cds-font-size-caption);color:var(--color-fg);background:var(--color-bg);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-xs) var(--cds-pad-sm);width:16rem;max-width:100%}
+.tg-main{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(17rem,1fr);gap:var(--cds-gap-md);align-items:start}
+@container (max-width:52rem){.tg-main{grid-template-columns:minmax(0,1fr)}.tg .tg-detail{position:static}}
+.tg-card{background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-lg);min-width:0}
+.tg-card-title{font-size:var(--cds-font-size-heading);font-weight:var(--cds-font-weight-medium);margin:0}
+.tg-card-note{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin:var(--cds-gap-xs) 0 var(--cds-gap-md);line-height:1.5;max-width:75ch}
+.tg-board{position:relative;container-type:inline-size}
+.tg-grid{display:grid;min-height:20rem}
+.tg-grid.tg-ready{min-height:0}
+.tg-grid[hidden]{display:none}
+.tg-cell{position:relative;aspect-ratio:1/1;margin:1px;border:0;border-radius:3px;padding:0;cursor:pointer;color:var(--tg-ink);font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;min-width:0;transition:opacity var(--cds-dur-slow)}
+.tg-ab{font-family:var(--font-anthropic-serif);font-size:clamp(10px,2.5cqw,21px)}
+.tg-bi{font-size:clamp(6.5px,1.05cqw,11px);margin-top:.2em;letter-spacing:.01em}
+.tg-num{font-size:clamp(6.5px,.95cqw,10px);margin-top:.15em;opacity:.65;font-variant-numeric:tabular-nums}
+@container (max-width:34rem){.tg-num{display:none}}
+@container (max-width:22rem){.tg-bi{display:none}}
+.tg-cell.tg-dim{opacity:.18}
+.tg-rg{display:none;position:absolute;top:2px;left:3px;font-size:clamp(6px,.95cqw,10px);line-height:1;font-variant-numeric:tabular-nums;opacity:.75;pointer-events:none}
+.tg-grid.tg-folded .tg-rg{display:block}
+.tg-cell.tg-ghost{background:transparent !important;box-shadow:inset 0 0 0 1px var(--color-border-line);cursor:default;pointer-events:none;opacity:.55}
+.tg-cell.tg-ghost>span{visibility:hidden}
+.tg-cell.tg-ghost::after{border:0}
+.tg-cell.tg-pair::before{content:"";position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 clamp(5px,1.15cqw,10px) clamp(5px,1.15cqw,10px) 0;border-color:transparent rgba(0,0,0,.34) transparent transparent;border-top-right-radius:3px;pointer-events:none}
+.tg-cell::after{content:"";position:absolute;inset:-1px;border-radius:4px;pointer-events:none}
+.tg-cell.tg-nr::after{border:2px dashed var(--tg-row)}
+.tg-cell.tg-nc::after{border:2px dashed var(--tg-col)}
+.tg-cell.tg-mir::after{border:2px dotted var(--color-fg)}
+.tg-cell.tg-sel{z-index:2}
+.tg-cell.tg-sel::after{border:3px solid var(--color-fg);inset:-3px;border-radius:5px}
+.tg-cell:focus-visible{outline:2px solid var(--tg-col);outline-offset:4px;z-index:3}
+.tg-ix{display:flex;align-items:center;justify-content:center;font-size:var(--cds-font-size-caption);font-variant-numeric:tabular-nums;padding:2px 0}
+.tg-ix-r{color:var(--tg-row)}
+.tg-ix-c{color:var(--tg-col)}
+.tg-layer{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);padding:2px 2px 4px;line-height:1.3}
+.tg-layer-bottom{padding:6px 2px 0}
+.tg-layer-n{color:var(--color-fg);font-weight:var(--cds-font-weight-medium)}
+.tg-qv{background:linear-gradient(var(--tg-col),var(--tg-col)) center/2px 100% no-repeat}
+.tg-qh{background:linear-gradient(var(--tg-row),var(--tg-row)) center/100% 2px no-repeat}
+.tg-tip{position:absolute;z-index:10;pointer-events:none;background:var(--cds-surface-popover);border:1px solid var(--cds-border);border-radius:var(--cds-radius);box-shadow:var(--cds-shadow-popover);padding:var(--cds-pad-xs) var(--cds-pad-sm);font-size:var(--cds-font-size-caption);max-width:16rem;line-height:1.45}
+.tg-tip[hidden]{display:none}
+.tg-tip-k{color:var(--cds-text-secondary)}
+.tg-tip-t{font-weight:var(--cds-font-weight-medium)}
+.tg-fail{display:flex;align-items:center;justify-content:center;gap:6px;color:var(--color-fg-muted);font-size:var(--cds-font-size-caption);min-height:20rem}
+.tg-fail::before{content:"";width:.375rem;height:.375rem;border-radius:50%;background:var(--color-bad)}
+.tg-fail[hidden]{display:none}
+.tg-legend{margin-top:var(--cds-gap-md);display:flex;flex-wrap:wrap;gap:var(--cds-gap-sm) var(--cds-gap-lg);align-items:flex-start}
+.tg-lg-group{display:flex;flex-direction:column;gap:2px}
+.tg-lg-head{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);padding-left:2px}
+.tg-lg-item{display:flex;align-items:center;gap:6px;font:inherit;font-size:var(--cds-font-size-caption);color:var(--color-fg);background:transparent;border:1px solid transparent;border-radius:var(--cds-radius);padding:2px 6px 2px 2px;cursor:pointer;text-align:left}
+.tg-lg-item:hover{border-color:var(--color-border-line)}
+.tg-lg-item[aria-pressed="true"]{border-color:var(--color-fg)}
+.tg-sw{width:.95rem;height:.95rem;border-radius:2px;flex:none}
+.tg-lg-n{color:var(--color-fg-muted);font-variant-numeric:tabular-nums}
+.tg .tg-detail{position:sticky;top:var(--cds-gap-md)}
+.tg-dhead{display:flex;gap:var(--cds-gap-md);align-items:center}
+.tg-sym{flex:none;width:3.6rem;height:3.6rem;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:var(--font-anthropic-serif);font-size:1.9rem;color:var(--tg-ink)}
+.tg-dname{font-family:var(--font-anthropic-serif);font-weight:400;font-size:var(--cds-font-size-title);margin:0;line-height:1.1}
+.tg-dsub{margin:4px 0 0;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.tg-figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,11rem),1fr));gap:var(--cds-gap-md);margin:var(--cds-gap-md) 0}
+.tg-fig{margin:0;min-width:0}
+.tg-fig-cap{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin:0 0 4px}
+.tg-fig svg{display:block;width:100%;height:auto;overflow:visible}
+.tg-facts{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px var(--cds-gap-md);margin:0;font-size:var(--cds-font-size-body);line-height:1.4}
+.tg-facts dt{color:var(--color-fg-muted);font-size:var(--cds-font-size-caption);padding-top:2px}
+.tg-facts dd{margin:0}
+.tg-h3{font-size:var(--cds-font-size-body);font-weight:var(--cds-font-weight-medium);margin:var(--cds-gap-lg) 0 var(--cds-gap-xs)}
+.tg-nbrs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));gap:4px}
+.tg-nb{display:flex;align-items:center;gap:6px;font:inherit;font-size:var(--cds-font-size-caption);color:var(--color-fg);background:transparent;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:4px 6px;cursor:pointer;text-align:left;min-width:0}
+.tg-nb:hover{border-color:var(--color-fg)}
+.tg-nb-k{font-variant-numeric:tabular-nums;white-space:nowrap;min-width:5.6em}
+.tg-nb-k.tg-r{color:var(--tg-row)}
+.tg-nb-k.tg-c{color:var(--tg-col)}
+.tg-nb-n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--color-fg-muted)}
+.tg-chip{display:inline-flex;align-items:center;justify-content:center;min-width:1.9rem;height:1.45rem;border-radius:3px;font-family:var(--font-anthropic-serif);color:var(--tg-ink);padding:0 4px;flex:none}
+.tg-chipbtn{display:inline-flex;align-items:center;gap:6px;font:inherit;color:var(--color-fg);background:transparent;border:0;padding:0;cursor:pointer;text-align:left}
+.tg-chipbtn:hover .tg-chipname{text-decoration:underline}
+.tg-hint{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin:6px 0 0}
+.tg-note{font-size:var(--cds-font-size-body);line-height:1.5;margin:var(--cds-gap-md) 0 0;padding-left:var(--cds-pad-sm);border-left:2px solid var(--color-border-line)}
+.tg-note:empty{display:none}
+.tg-read{margin-top:var(--cds-gap-md)}
+.tg-read p{font-size:var(--cds-font-size-body);line-height:1.6;max-width:75ch;margin:var(--cds-gap-sm) 0 0}
+.tg-read .tg-src{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.tg [hidden]{display:none !important}
+.tg-caveat{background:var(--color-bg);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-md);margin:0 0 var(--cds-gap-md);max-width:75ch}
+.tg-caveat p{font-size:var(--cds-font-size-caption);line-height:1.55;margin:0 0 var(--cds-gap-xs);color:var(--color-fg)}
+.tg-caveat p:last-child{margin-bottom:0}
+.tg-caveat .tg-caveat-t{font-size:var(--cds-font-size-body);font-weight:var(--cds-font-weight-medium)}
+.tg-mixed-sec{margin-top:var(--cds-gap-lg)}
+.tg-mixed-h{font-size:var(--cds-font-size-body);font-weight:var(--cds-font-weight-medium);margin:0 0 2px}
+.tg-mixed-sub{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin:0 0 var(--cds-gap-sm);max-width:75ch;line-height:1.5}
+.tg-mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,14rem),1fr));gap:var(--cds-gap-sm)}
+.tg-mc{font:inherit;color:var(--color-fg);background:var(--color-bg);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-sm);text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:6px;min-width:0}
+.tg-mc:hover{border-color:var(--color-fg)}
+.tg-mc[aria-pressed="true"]{border-color:var(--color-fg);box-shadow:inset 0 0 0 1px var(--color-fg)}
+.tg-mc:focus-visible{outline:2px solid var(--tg-col);outline-offset:2px}
+.tg-mc-h{display:flex;align-items:center;gap:8px;min-width:0}
+.tg-mc-name{font-size:var(--cds-font-size-body);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.tg-mc-num{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin-left:auto;font-variant-numeric:tabular-nums}
+.tg-mix{display:grid;grid-template-columns:3.8em minmax(0,1fr) 4.6em;align-items:center;gap:3px 6px;font-size:var(--cds-font-size-caption)}
+.tg-mix-who{color:var(--color-fg-muted)}
+.tg-mix-v{font-variant-numeric:tabular-nums;text-align:right}
+.tg-bar{display:flex;height:.7rem;border-radius:3px;overflow:hidden}
+.tg-bar-r1{background:var(--tg-row)}
+.tg-bar-r2{background:color-mix(in srgb,var(--tg-row) 20%,transparent)}
+.tg-bar-c1{background:var(--tg-col)}
+.tg-bar-c2{background:color-mix(in srgb,var(--tg-col) 20%,transparent)}
+.tg-mc-ev{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);font-variant-numeric:tabular-nums}
+.tg-mc-flag{font-size:var(--cds-font-size-caption);color:var(--color-fg)}
+.tg-dview{margin:var(--cds-gap-md) 0 0}
+.tg-sl{border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-sm) var(--cds-pad-md);margin:0 0 var(--cds-gap-md);background:var(--color-bg)}
+.tg-sl-head{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:var(--cds-font-size-body);font-weight:var(--cds-font-weight-medium)}
+.tg-sl-reset{font:inherit;font-size:var(--cds-font-size-caption);font-weight:400;background:transparent;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:2px 8px;color:var(--color-fg);cursor:pointer}
+.tg-sl-reset:focus-visible,.tg-sl-row input:focus-visible,.tg-sl-check input:focus-visible{outline:2px solid var(--tg-col);outline-offset:2px}
+.tg-sl-row{display:grid;grid-template-columns:minmax(0,10rem) minmax(0,1fr) 2.6rem;align-items:center;gap:8px;font-size:var(--cds-font-size-caption);margin:4px 0}
+.tg-sl-row input{width:100%;accent-color:var(--color-fg)}
+.tg-sl-row output{font-variant-numeric:tabular-nums;text-align:right}
+.tg-sl-mode{margin:6px 0 4px}
+.tg-sl-note{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin:0 0 6px;line-height:1.4}
+.tg-sl-vals{font-size:var(--cds-font-size-caption);margin:6px 0 0;line-height:1.5;font-variant-numeric:tabular-nums}
+.tg-sl-check{display:flex;align-items:center;gap:6px;font-size:var(--cds-font-size-caption);margin-top:6px;color:var(--color-fg-muted);cursor:pointer}
+.tg-dyn{margin:var(--cds-gap-md) 0}
+.tg-dyn-pick{display:flex;align-items:center;gap:8px;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin:0 0 6px}
+.tg-dyn-select{font:inherit;font-size:var(--cds-font-size-caption);color:var(--color-fg);background:var(--color-bg);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-xs) var(--cds-pad-sm);min-width:0;max-width:100%}
+.tg-dyn-select:focus-visible{outline:2px solid var(--tg-col);outline-offset:2px}
+.tg-dyn-desc{font-size:var(--cds-font-size-caption);line-height:1.5;margin:0 0 var(--cds-gap-sm);max-width:60ch}
+.tg-eta{margin:0 0 var(--cds-gap-sm)}
+.tg-dyn svg{display:block;width:100%;height:auto;overflow:visible}
+.tg-dyn-txt{font-size:var(--cds-font-size-body);line-height:1.5;margin:6px 0 var(--cds-gap-sm);max-width:60ch}
+.tg-dyn-cav{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);line-height:1.5;margin:var(--cds-gap-sm) 0 0;max-width:60ch}
+.tg-red{color:var(--tg-row)}
+.tg-blue{color:var(--tg-col)}
+.tg [data-dash-source-state=refreshing]{opacity:.5;transition:opacity var(--cds-dur-slow)}
+.tg [data-dash-source-state=empty]{color:transparent}
+@media (prefers-reduced-motion:reduce){.tg-cell{transition:none}}
+</style>
+
+<div class="tg">
+  <header class="tg-head" id="overview">
+    <h1 class="tg-title">2×2 Games Lab: a visual compendium</h1>
+    <p class="tg-lede"><span data-source="summary" data-field="games" data-row="0">—</span> strict ordinal games, <span data-source="summary" data-field="distinct" data-row="0">—</span> of them distinct once the players swap roles. <span data-source="summary" data-field="oneNash" data-row="0">—</span> have a single Nash equilibrium, <span data-source="summary" data-field="twoNash" data-row="0">—</span> have two and <span data-source="summary" data-field="noNash" data-row="0">—</span> cycle with none. Pick a game to see its payoffs and the six games one swap away.</p>
+  </header>
+
+  <div class="tg-controls" id="controls">
+    <div class="tg-ctl"><span id="tg-view-l">Show</span><div class="tg-seg" role="group" aria-labelledby="tg-view-l" id="tg-view"><button type="button" data-v="all">All games</button><button type="button" data-v="mixed">Mixed equilibrium games</button></div></div>
+    <div class="tg-ctl" id="tg-mode-ctl"><span id="tg-mode-l">Colour by</span><div class="tg-seg" role="group" aria-labelledby="tg-mode-l" id="tg-mode"></div></div>
+    <div class="tg-ctl" id="tg-order-ctl"><span id="tg-order-l">Order</span><div class="tg-seg" role="group" aria-labelledby="tg-order-l" id="tg-order"><button type="button" data-v="chart">Chart, Prisoner’s Dilemma centred</button><button type="button" data-v="tiles">Tiles grouped</button></div></div>
+    <div class="tg-ctl" id="tg-fold-ctl"><span id="tg-fold-l">Mirror pairs</span><div class="tg-seg" role="group" aria-labelledby="tg-fold-l" id="tg-fold"><button type="button" data-v="both">Show both</button><button type="button" data-v="fold">Fold along the diagonal</button></div></div>
+    <input class="tg-search" id="tg-search" type="search" placeholder="Find a game by name, symbol, code, number or RG number" aria-label="Find a game">
+  </div>
+
+  <div class="tg-main">
+    <section class="tg-card" id="periodic-table">
+      <h2 class="tg-card-title">Periodic table of the 2×2 games</h2>
+      <p class="tg-card-note">Each square is one game: its symbol, its binomial code from Bruns (2015) in brackets, and its number. Games next to each other differ by one swap of adjacent payoffs. Around the selected game, dashed outlines mark its neighbours by <span class="tg-red">Row’s swaps</span> and <span class="tg-blue">Column’s swaps</span>; a dotted outline marks its mirror with the players’ roles swapped. Arrow keys move around the table. Switch the side panel to “Evolutionary dynamics” to see, for any game you pick, where populations playing it drift.</p>
+      <p class="tg-card-note" id="tg-fold-note" hidden>Folded along the diagonal, the table shows <span data-source="summary" data-field="distinct" data-row="0">—</span> distinct games instead of <span data-source="summary" data-field="games" data-row="0">—</span>. Layer 4 folds onto layer 2, and the upper-left half of layers 1 and 3 onto their lower-right half, following Bruns’ choice of the right-hand forms. A cell with a turned-down corner stands for two games, its own number and its mirror’s with the players swapped; the symmetric games on the diagonal stand alone. Swaps that would cross the fold land on the neighbour’s mirror, which is the cell outlined. The small number in each top-left corner is the game’s Rapoport–Guyer number from their 1966 taxonomy, which also counts each mirror pair once, so it fits the folded table one to one. Search “rg” and a number to find one.</p>
+      <div class="tg-board" id="tg-board" data-source="games">
+        <div class="tg-grid dash-skeleton" id="tg-grid" role="group" aria-label="Periodic table of 2×2 games"></div>
+        <div class="tg-fail" id="tg-fail" hidden>Failed to load</div>
+        <div class="tg-tip" id="tg-tip" hidden></div>
+      </div>
+      <div class="tg-legend" id="tg-legend" data-source="legend_counts"></div>
+    </section>
+
+    <section class="tg-card" id="mixed-equilibria" data-source="mixed games" hidden>
+      <h2 class="tg-card-title">Games with a mixed equilibrium</h2>
+      <p class="tg-card-note">In <span data-source="summary" data-field="mixed" data-row="0">—</span> games neither player has a dominant strategy, and each has an equilibrium where both players randomise. Each player mixes so that the other is indifferent between their two moves, so a player’s mix is set by the other player’s payoffs, not their own.</p>
+      <div class="tg-caveat" id="mixed-caveat">
+        <p class="tg-caveat-t">Ranks are treated as payoffs</p>
+        <p>The topology only says how each player ranks the four outcomes. Probabilities need cardinal payoffs, so here the ranks 1 to 4 are used as if they were payoffs an equal distance apart. With real payoffs the mixes change: make the crash in Chicken much worse than the other outcomes and each driver swerves more often. Which games have a mixed equilibrium does not change.</p>
+        <p>The bars give Row’s chance of playing Top and Column’s chance of playing Left. Expected payoffs are what each player averages when both mix, on the same rank scale, and assume each player randomises independently.</p>
+      </div>
+      <div class="tg-mixed-sec" id="mixed-two-pure">
+        <h3 class="tg-mixed-h">Two pure equilibria and a mixed one (<span data-source="summary" data-field="twoNash" data-row="0">—</span>)</h3>
+        <p class="tg-mixed-sub">The Battle, Chicken and Stag Hunt types. Mixing is a third equilibrium; cards say where both players do worse than at either pure one.</p>
+        <div class="tg-mgrid" id="tg-mx-two"></div>
+      </div>
+      <div class="tg-mixed-sec" id="mixed-only">
+        <h3 class="tg-mixed-h">Cyclic games, where the mixed equilibrium is the only one (<span data-source="summary" data-field="noNash" data-row="0">—</span>)</h3>
+        <p class="tg-mixed-sub">With no pure equilibrium, someone always wants to switch, so randomising is the only stable way to play.</p>
+        <div class="tg-mgrid" id="tg-mx-only"></div>
+      </div>
+    </section>
+
+    <section class="tg-card tg-detail" id="game-detail" data-source="games mixed" aria-live="polite">
+      <div class="tg-dhead"><div class="tg-sym" id="tg-sym"></div><div><h2 class="tg-dname" id="tg-dname"></h2><p class="tg-dsub" id="tg-dsub"></p></div></div>
+      <div class="tg-seg tg-dview" role="group" aria-label="Figures for this game" id="tg-dview"><button type="button" data-v="payoffs">Payoffs</button><button type="button" data-v="dyn">Evolutionary dynamics</button></div>
+      <div class="tg-dyn" id="tg-dyn" hidden>
+        <div class="tg-dyn-pick"><label for="tg-dyn-sel">Dynamic</label><select id="tg-dyn-sel" class="tg-dyn-select"><option value="rep">Replicator</option><option value="br">Best response</option><option value="logit">Logit (noisy best response)</option><option value="bnn">Brown–von Neumann–Nash</option><option value="smith">Smith (pairwise comparison)</option></select></div>
+        <p class="tg-dyn-desc" id="tg-dyn-desc"></p>
+        <label class="tg-sl-row tg-eta" id="tg-eta-row" hidden><span class="tg-sl-l">Noise level</span><input type="range" id="tg-eta" min="0.02" max="0.5" step="0.01" aria-label="Noise level for logit dynamics"><output></output></label>
+        <p class="tg-fig-cap">Two populations, one of Row players and one of Column players. The corners are the four outcomes, placed as in the payoff matrix; shading shows where play ends up from each starting mix.</p>
+        <div class="tg-sl" id="tg-sl">
+          <div class="tg-sl-head"><span>Payoff values</span><button type="button" class="tg-sl-reset" id="tg-sl-reset">Equal spacing</button></div>
+          <div class="tg-seg tg-sl-mode" role="group" aria-label="What to set" id="tg-sl-mode"><button type="button" data-v="pay">Set payoffs</button><button type="button" data-v="mix">Set the equilibrium mix</button></div>
+          <div id="tg-payset">
+            <p class="tg-fig-cap">Each player’s worst outcome counts 0 and their best counts 1. Slide the two middle ranks to try other payoffs; their order stays the same, so it is still the same game. In Stag Hunt, pushing both towards 0.75 makes hare the safer hunt: the saddle moves towards the stag corner and the hare basin grows.</p>
+            <label class="tg-sl-row" data-k="r2"><span class="tg-sl-l">Second-worst (rank 2)</span><input type="range" min="0.01" max="0.99" step="0.01" aria-label="Second-worst payoff"><output></output></label>
+            <label class="tg-sl-row" data-k="r3"><span class="tg-sl-l">Second-best (rank 3)</span><input type="range" min="0.01" max="0.99" step="0.01" aria-label="Second-best payoff"><output></output></label>
+            <label class="tg-sl-row" data-k="c2" hidden><span class="tg-sl-l tg-blue">Column’s second-worst</span><input type="range" min="0.01" max="0.99" step="0.01" aria-label="Column’s second-worst payoff"><output></output></label>
+            <label class="tg-sl-row" data-k="c3" hidden><span class="tg-sl-l tg-blue">Column’s second-best</span><input type="range" min="0.01" max="0.99" step="0.01" aria-label="Column’s second-best payoff"><output></output></label>
+            <label class="tg-sl-check"><input type="checkbox" id="tg-sl-sep"> Set Row’s and Column’s values separately</label>
+          </div>
+          <div id="tg-mixset" hidden>
+            <p class="tg-fig-cap">Pick the mixed equilibrium you want and the payoffs that produce it are filled in. Each player’s mix is set by the other player’s payoffs, so the Top slider changes Column’s payoffs and the Right slider changes Row’s. Of all payoffs giving that mix, the ones closest to the current values are used.</p>
+            <div id="tg-mix-ctl">
+              <label class="tg-sl-row" data-m="col"><span class="tg-sl-l tg-red">Row players choosing Top</span><input type="range" min="0.01" max="0.99" step="0.01" aria-label="Share of Row players choosing Top at the mixed equilibrium"><output></output></label>
+              <p class="tg-sl-note" id="tg-mix-note-col"></p>
+              <label class="tg-sl-row" data-m="row"><span class="tg-sl-l tg-blue">Column players choosing Right</span><input type="range" min="0.01" max="0.99" step="0.01" aria-label="Share of Column players choosing Right at the mixed equilibrium"><output></output></label>
+              <p class="tg-sl-note" id="tg-mix-note-row"></p>
+              <p class="tg-sl-vals" id="tg-mix-vals"></p>
+            </div>
+            <p class="tg-sl-note" id="tg-mix-none" hidden>This game has no mixed equilibrium, because at least one player has a dominant strategy. Pick one of the games without one, such as Stag Hunt, Chicken or a cyclic game, or switch back to setting payoffs.</p>
+          </div>
+        </div>
+        <svg id="tg-dyn-sq" role="img" aria-label="Evolutionary dynamics with two populations"></svg>
+        <p class="tg-dyn-txt" id="tg-dyn-txt"></p>
+        <div id="tg-dyn-one">
+          <p class="tg-fig-cap">One population, for symmetric games: everyone meets everyone and plays A (Row’s Top, Column’s Right) or B.</p>
+          <svg id="tg-dyn-line" role="img" aria-label="Evolutionary dynamics with one population"></svg>
+          <p class="tg-dyn-txt" id="tg-dyn-one-txt"></p>
+        </div>
+        <p class="tg-dyn-cav">At equal spacing the ranks act as payoffs, as in the mixed-equilibrium view. Payoff values move the mixed point, the dividing lines and the basin sizes. Under replicator, best-response, Brown–von Neumann–Nash and Smith dynamics the strict Nash equilibria are always stable resting points; logit’s noise moves resting points into the square. Basins come from simulating play from a grid of starting mixes. Corner labels keep showing the ranks.</p>
+      </div>
+      <div class="tg-figs" id="tg-payfigs">
+        <div class="tg-fig"><p class="tg-fig-cap">Payoffs (<span class="tg-red">Row</span>, <span class="tg-blue">Column</span>), arrows show who wants to switch</p><svg id="tg-mx" role="img" aria-label="Payoff matrix"></svg></div>
+        <div class="tg-fig"><p class="tg-fig-cap">The same four outcomes in payoff space</p><svg id="tg-gr" role="img" aria-label="Outcomes plotted by payoff"></svg></div>
+      </div>
+      <dl class="tg-facts" id="tg-facts"></dl>
+      <h3 class="tg-h3">One swap away</h3>
+      <div class="tg-nbrs" id="tg-nbrs"></div>
+      <p class="tg-hint">A 3↔4 swap moves a player’s best outcome, so it leads to another layer.</p>
+      <p class="tg-note" id="tg-note"></p>
+    </section>
+  </div>
+
+  <section class="tg-card tg-read" id="how-to-read">
+    <h2 class="tg-card-title">How the table is built</h2>
+    <p>Payoffs are ranks: 4 is a player’s best outcome and 1 the worst. Every game is drawn the same way, with Row’s 4 in the right column and Column’s 4 in the top row, so each game has exactly one place in the table. Its number reads layer, Row’s payoff pattern, then Column’s.</p>
+    <p>Swapping a player’s two lowest payoffs (1↔2) links games into tiles of four. Swapping the middle payoffs (2↔3) joins tiles into a layer. Swapping the two highest (3↔4) moves a 4 and so changes layer: in layer 1 the two 4s sit in opposite corners, in layer 3 they share a cell, and in layers 2 and 4 they share a row or a column.</p>
+    <p>Each layer wraps around like a torus, so a tile split across an edge is still one tile. The chart order scrolls the layers so that Prisoner’s Dilemma sits at the centre; “Tiles grouped” puts each tile’s four games side by side instead.</p>
+    <p>The symmetric games run along the diagonal from bottom left to top right, and every other game has a mirror across it with the players’ roles swapped. Families are named by the payoffs at equilibrium: win-win (4,4), biased (4,3), second best (3,3), unfair (4,2), the Prisoner’s Dilemma family (3,2 or 2,2), and cyclic games with no equilibrium in pure strategies.</p>
+    <p>The code in brackets is Bruns’ binomial name from “Names for Games” (2015): the symmetric game whose payoff pattern Row has, then Column’s. Samaritan’s Dilemma is HaCh, Harmony × Chicken, and its mirror is ChHa. Symmetric games keep a single code. The codes follow his 2015 names for the symmetric games, so a few differ from this chart’s symbols: Cm is Prisoner’s Delight (his Compromise), Pc is Mixed Harmony (his Peace), As is Assurance and Ha is Harmony, not Hamlet.</p>
+    <p class="tg-src">Layout and names follow Bryan Bruns’ chart of Robinson and Goforth’s topology (2005). Rapoport–Guyer numbers are read from the chart’s Rapoport, Guyer and Gordon panel. Families, equilibria, dominant strategies and swap neighbours are worked out from each game’s payoffs.</p>
+  </section>
+</div>
+
+<script>
+dash.calc('summary', {
+  inputs: ['games'],
+  title: 'Topology totals',
+  description: 'Counts all games, games distinct up to swapping players, and games by number of Nash equilibria.',
+  fn: (games) => [{
+    games: games.length,
+    distinct: games.filter((g) => Number(g.game) <= Number(g.mirror)).length,
+    oneNash: games.filter((g) => g.nashCount === 1).length,
+    twoNash: games.filter((g) => g.nashCount === 2).length,
+    noNash: games.filter((g) => g.nashCount === 0).length,
+    mixed: games.filter((g) => g.dominance === 'Neither').length,
+  }],
+});
+dash.calc('mixed', {
+  inputs: ['games'],
+  title: 'Mixed equilibria, ranks as payoffs',
+  description: 'For games where neither player has a dominant strategy, finds the mix that leaves the other player indifferent, treating ranks 1 to 4 as payoffs.',
+  fn: (games) => games.filter((g) => g.dominance === 'Neither').map((g) => {
+    const r = String(g.rowPay).split(',').map(Number); // top-left, top-right, bottom-left, bottom-right
+    const c = String(g.colPay).split(',').map(Number);
+    const pTop = (c[3] - c[2]) / (c[0] - c[1] - c[2] + c[3]); // Row's mix makes Column indifferent
+    const qLeft = (r[3] - r[1]) / (r[0] - r[1] - r[2] + r[3]); // Column's mix makes Row indifferent
+    return { game: g.game, pTop, qLeft, rowValue: qLeft * r[0] + (1 - qLeft) * r[1], colValue: pTop * c[0] + (1 - pTop) * c[2] };
+  }),
+});
+dash.calc('legend_counts', {
+  inputs: ['games'],
+  title: 'Games per colour group',
+  description: 'Counts games in each group of every colour mode, for the full table and for the table folded along its diagonal.',
+  fn: (games) => {
+    const keys = { family: (g) => g.subfamily, nash: (g) => g.nashCount, dominance: (g) => g.dominance, swaps: (g) => g.swapsToWinWin, layer: (g) => g.layer };
+    // Folded: keep layer 2, drop layer 4, and keep the diagonal and lower-right half of layers 1 and 3 (chart order)
+    const rowsOrder = [2, 3, 4, 5, 6, 1]; const colsOrder = [1, 6, 5, 4, 3, 2];
+    const kept = (g) => Number(g.layer) === 2 || (Number(g.layer) !== 4 && rowsOrder.indexOf(Number(g.row)) + colsOrder.indexOf(Number(g.col)) >= 5);
+    const out = [];
+    for (const [scope, set] of [['all', games], ['folded', games.filter(kept)]]) {
+      for (const [mode, key] of Object.entries(keys)) {
+        const m = new Map();
+        for (const g of set) { const v = String(key(g)); m.set(v, (m.get(v) || 0) + 1); }
+        for (const [value, n] of m) out.push({ scope, mode, value, games: n });
+      }
+    }
+    return out;
+  },
+});
+
+const root = document.querySelector('.tg');
+const grid = root.querySelector('#tg-grid');
+const board = root.querySelector('#tg-board');
+const tip = root.querySelector('#tg-tip');
+const failEl = root.querySelector('#tg-fail');
+const legendEl = root.querySelector('#tg-legend');
+const modeEl = root.querySelector('#tg-mode');
+const orderEl = root.querySelector('#tg-order');
+const searchEl = root.querySelector('#tg-search');
+const detailEl = root.querySelector('#game-detail');
+const viewEl = root.querySelector('#tg-view');
+const mixedEl = root.querySelector('#mixed-equilibria');
+const tableEl = root.querySelector('#periodic-table');
+const foldEl = root.querySelector('#tg-fold');
+const isKept = (g) => Number(g.layer) === 2 || (Number(g.layer) !== 4 && ORDERS.chart.r.indexOf(Number(g.row)) + ORDERS.chart.c.indexOf(Number(g.col)) >= 5);
+const repId = (id) => { const g = byGame.get(String(id)); return state.fold && g && !isKept(g) ? String(g.mirror) : String(id); };
+const syncCtls = () => {
+  const mixed = state.view === 'mixed';
+  root.querySelector('#tg-mode-ctl').hidden = mixed;
+  root.querySelector('#tg-order-ctl').hidden = mixed || state.fold;
+  root.querySelector('#tg-fold-ctl').hidden = mixed;
+  root.querySelector('#tg-fold-note').hidden = !state.fold;
+};
+
+const FAMILY_COLORS = {
+  'Harmonious': '#7fc25e', 'Stag Hunt': '#bdd348', 'Battle': '#9fe1f2', 'Self-serving': '#a8c3f2', 'Altruistic': '#72c7c2',
+  'Second Best': '#f2df78', 'Unfair': '#f5a862', 'Tragic': '#f39cc3', "Prisoner's Dilemma": '#a985e0', 'Alibi': '#cf7fb0', 'Cyclic': '#d4d4d4',
+};
+const MODES = {
+  family: {
+    label: 'Family', key: (g) => g.subfamily, colors: FAMILY_COLORS,
+    groups: [
+      ['Win-win, equilibrium (4,4)', [['Harmonious', 'Harmonious'], ['Stag Hunt', 'Stag Hunt']]],
+      ['Biased (4,3)', [['Battle', 'Battle'], ['Self-serving', 'Self-serving'], ['Altruistic', 'Altruistic']]],
+      ['Second best (3,3)', [['Second Best', 'Second best']]],
+      ['Unfair (4,2)', [['Unfair', 'Unfair']]],
+      ['Prisoner’s Dilemma family', [['Tragic', 'Tragic (3,2)'], ["Prisoner's Dilemma", 'Prisoner’s Dilemma (2,2)'], ['Alibi', 'Alibi (3,2), Pareto-deficient']]],
+      ['No equilibrium', [['Cyclic', 'Cyclic']]],
+    ],
+  },
+  nash: {
+    label: 'Equilibria', key: (g) => String(g.nashCount), colors: { '0': '#d4d4d4', '1': '#b9d4f0', '2': '#f2c76a' },
+    groups: [['Pure-strategy Nash equilibria', [['1', 'One'], ['2', 'Two'], ['0', 'None, play cycles']]]],
+  },
+  dominance: {
+    label: 'Dominant strategies', key: (g) => g.dominance, colors: { 'Both': '#c7a6ec', 'Row': '#f3a8a1', 'Column': '#a8c2f3', 'Neither': '#e2e2e2' },
+    groups: [['Who has a dominant strategy', [['Both', 'Both players'], ['Row', 'Row only'], ['Column', 'Column only'], ['Neither', 'Neither']]]],
+  },
+  swaps: {
+    label: 'Swaps to win-win', key: (g) => String(g.swapsToWinWin), colors: { '0': '#7fc25e', '1': '#cbe596', '2': '#f5d68c', '3': '#ef9a7c' },
+    groups: [['Fewest swaps to reach a (4,4) equilibrium', [['0', 'Already win-win'], ['1', 'One swap'], ['2', 'Two swaps'], ['3', 'Three swaps']]]],
+  },
+  layer: {
+    label: 'Layer', key: (g) => String(g.layer), colors: { '1': '#c9b6f2', '2': '#f5b9cf', '3': '#b9e3a8', '4': '#f7cf9c' },
+    groups: [['Where the two 4s sit', [['1', 'Layer 1, opposite corners'], ['2', 'Layer 2, same row'], ['3', 'Layer 3, same cell'], ['4', 'Layer 4, same column']]]],
+  },
+};
+const LAYER_DESC = { 1: '4s in opposite corners', 2: '4s share the top row', 3: '4s in the same cell', 4: '4s share the right column' };
+const FAMILY_NAME = { 'PD Family': 'Prisoner’s Dilemma family', 'Second Best': 'Second best', 'Win-win': 'Win-win', 'Biased': 'Biased', 'Unfair': 'Unfair', 'Cyclic': 'Cyclic' };
+const ORDERS = { chart: { r: [2, 3, 4, 5, 6, 1], c: [1, 6, 5, 4, 3, 2] }, tiles: { r: [6, 5, 4, 3, 2, 1], c: [1, 2, 3, 4, 5, 6] } };
+const QUAD = { 4: [0, 0], 1: [0, 1], 3: [1, 0], 2: [1, 1] };
+const CELL_NAME = { TL: 'top-left', TR: 'top-right', BL: 'bottom-left', BR: 'bottom-right' };
+const CELL_IDX = { TL: 0, TR: 1, BL: 2, BR: 3 };
+const CELLS = ['TL', 'TR', 'BL', 'BR'];
+const SWAPS = [['r12', 'Row', '1↔2'], ['c12', 'Column', '1↔2'], ['r23', 'Row', '2↔3'], ['c23', 'Column', '2↔3'], ['r34', 'Row', '3↔4'], ['c34', 'Column', '3↔4']];
+
+const state = { mode: 'family', order: 'chart', sel: '111', focus: null, q: '', view: 'all', fold: false, dview: 'payoffs' };
+let byGame = new Map();
+const cells = new Map();
+const posMap = new Map();
+let builtFor = null;
+let builtOrder = null;
+
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const famColor = (g) => FAMILY_COLORS[g.subfamily] || '#dddddd';
+const pays = (g) => ({ r: String(g.rowPay).split(',').map(Number), c: String(g.colPay).split(',').map(Number) });
+const famLabel = (g) => {
+  const f = FAMILY_NAME[g.family] || g.family;
+  return g.subfamily && g.subfamily !== g.family && g.subfamily !== 'Second Best' && g.subfamily !== 'Unfair' && g.subfamily !== 'Cyclic' ? f + ': ' + g.subfamily.replace("Prisoner's", 'Prisoner’s') : f;
+};
+const neText = (g) => {
+  if (!g.nash) return 'None, play cycles';
+  const p = String(g.nashPayoffs).split(' ');
+  return String(g.nash).split(' ').map((c, i) => CELL_NAME[c] + ' (' + p[i] + ')').join(' and ');
+};
+
+Object.entries(MODES).forEach(([k, m]) => {
+  const b = el('button', null, m.label); b.type = 'button'; b.dataset.v = k; modeEl.append(b);
+});
+const syncButtons = () => {
+  modeEl.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === state.mode)));
+  orderEl.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === state.order)));
+  viewEl.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === state.view)));
+  root.querySelectorAll('#tg-dview button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === state.dview)));
+  root.querySelectorAll('#tg-fold button').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.v === 'fold') === state.fold)));
+};
+syncButtons();
+
+function axis(order, lead, cell, tail) {
+  const list = [...lead]; const pos = [[], []]; let quad = 0;
+  for (let h = 0; h < 2; h++) {
+    order.forEach((v, i) => {
+      if (i > 0 && Math.ceil(order[i - 1] / 2) !== Math.ceil(v / 2)) list.push('var(--tg-tile)');
+      list.push(cell); pos[h][i] = list.length;
+    });
+    if (h === 0) { list.push('var(--tg-quad)'); quad = list.length; }
+  }
+  const last = list.length;
+  list.push(...tail);
+  return { list, pos, quad, first: lead.length + 1, last };
+}
+
+function build(rows) {
+  const o = ORDERS[state.order];
+  const C = axis(o.c, ['1.5em'], 'minmax(0,1fr)', []);
+  const R = axis(o.r, ['auto', 'auto'], 'auto', ['auto']);
+  grid.style.gridTemplateColumns = C.list.join(' ');
+  grid.style.gridTemplateRows = R.list.join(' ');
+  grid.replaceChildren();
+  cells.clear(); posMap.clear();
+  const place = (e, r, c) => { e.style.gridRow = String(r); e.style.gridColumn = String(c); grid.append(e); };
+  [[4, 0, 1, ''], [1, 1, 1, ''], [3, 0, R.list.length, ' tg-layer-bottom'], [2, 1, R.list.length, ' tg-layer-bottom']].forEach(([L, ch, row, extra]) => {
+    const d = el('div', 'tg-layer' + extra);
+    d.append(el('span', 'tg-layer-n', 'Layer ' + L), ' ' + (state.fold && L === 4 ? 'folded onto layer 2, players swapped' : LAYER_DESC[L]));
+    place(d, row, C.pos[ch][0] + ' / ' + (C.pos[ch][5] + 1));
+  });
+  for (let h = 0; h < 2; h++) {
+    o.c.forEach((v, i) => place(el('div', 'tg-ix tg-ix-c', String(v)), 2, C.pos[h][i]));
+    o.r.forEach((v, i) => place(el('div', 'tg-ix tg-ix-r', String(v)), R.pos[h][i], 1));
+  }
+  place(el('div', 'tg-qv'), R.first + ' / ' + (R.last + 1), C.quad);
+  place(el('div', 'tg-qh'), R.quad, C.first + ' / ' + (C.last + 1));
+  rows.forEach((g) => {
+    const id = String(g.game);
+    const [h, ch] = QUAD[Number(g.layer)];
+    const ri = o.r.indexOf(Number(g.row)); const ci = o.c.indexOf(Number(g.col));
+    const b = el('button', 'tg-cell'); b.type = 'button'; b.dataset.game = id;
+    const vr = h * 6 + ri; const vc = ch * 6 + ci;
+    b.dataset.vr = String(vr); b.dataset.vc = String(vc);
+    posMap.set(vr * 12 + vc, id);
+    b.append(el('span', 'tg-rg', String(g.rapoportGuyer)), el('span', 'tg-ab', g.abbr), el('span', 'tg-bi', '(' + g.binomial + ')'), el('span', 'tg-num', id));
+    b.setAttribute('aria-label', g.name + ', ' + g.binomial + ', game ' + id);
+    place(b, R.pos[h][ri], C.pos[ch][ci]);
+    cells.set(id, b);
+  });
+  grid.classList.add('tg-ready');
+}
+
+function matchesQ(g) {
+  const q = state.q.trim().toLowerCase();
+  const rgq = q.match(/^(?:rg|#)\s*(\d+)$/);
+  if (rgq) return String(g.rapoportGuyer) === rgq[1];
+  return !q || String(g.game).startsWith(q) || String(g.abbr).toLowerCase().startsWith(q) || String(g.binomial).toLowerCase().startsWith(q) || String(g.name).toLowerCase().includes(q) || String(g.binomialName).toLowerCase().includes(q);
+}
+function matches(g) {
+  const okQ = matchesQ(g);
+  const okF = !state.focus || MODES[state.mode].key(g) === state.focus;
+  return okQ && okF;
+}
+
+function paint() {
+  const M = MODES[state.mode];
+  const sel = byGame.get(state.sel);
+  const nr = new Set(); const nc = new Set();
+  if (sel) { ['r12', 'r23', 'r34'].forEach((k) => nr.add(repId(sel[k]))); ['c12', 'c23', 'c34'].forEach((k) => nc.add(repId(sel[k]))); }
+  grid.classList.toggle('tg-folded', state.fold);
+  for (const [id, b] of cells) {
+    const g = byGame.get(id);
+    b.style.background = M.colors[M.key(g)] || '#dddddd';
+    const ghost = state.fold && !isKept(g);
+    const pair = state.fold && !ghost && String(g.mirror) !== id;
+    b.classList.toggle('tg-ghost', ghost);
+    b.classList.toggle('tg-pair', pair);
+    const numEl = b.querySelector('.tg-num'); if (numEl) numEl.textContent = pair ? id + '/' + g.mirror : id;
+    b.setAttribute('aria-label', g.name + ', ' + g.binomial + ', game ' + id + (pair ? ', also stands for game ' + g.mirror + ' with the players swapped' : ''));
+    if (ghost) {
+      b.classList.remove('tg-dim', 'tg-sel', 'tg-nr', 'tg-nc', 'tg-mir');
+      b.tabIndex = -1; b.setAttribute('aria-hidden', 'true'); b.setAttribute('aria-pressed', 'false');
+      continue;
+    }
+    b.removeAttribute('aria-hidden');
+    const mg = pair ? byGame.get(String(g.mirror)) : null;
+    const okQ = matchesQ(g) || (!!mg && matchesQ(mg));
+    b.classList.toggle('tg-dim', !(okQ && (!state.focus || M.key(g) === state.focus)));
+    const isSel = id === state.sel;
+    b.classList.toggle('tg-sel', isSel);
+    b.classList.toggle('tg-nr', !isSel && nr.has(id));
+    b.classList.toggle('tg-nc', !isSel && nc.has(id) && !nr.has(id));
+    b.classList.toggle('tg-mir', !state.fold && !!sel && !isSel && String(sel.mirror) === id && !nr.has(id) && !nc.has(id));
+    b.tabIndex = isSel ? 0 : -1;
+    b.setAttribute('aria-pressed', String(isSel));
+  }
+}
+
+function drawLegend() {
+  const M = MODES[state.mode];
+  const lc = dash.data('legend_counts');
+  const counts = new Map();
+  const scope = state.fold ? 'folded' : 'all';
+  if (lc.status === 'ok' && Array.isArray(lc.data)) lc.data.forEach((r) => { if (r.mode === state.mode && (r.scope || 'all') === scope) counts.set(String(r.value), r.games); });
+  const fmt = d3.format(',');
+  legendEl.replaceChildren(...M.groups.map(([head, items]) => {
+    const gEl = el('div', 'tg-lg-group');
+    gEl.append(el('div', 'tg-lg-head', head));
+    items.forEach(([v, label]) => {
+      const b = el('button', 'tg-lg-item'); b.type = 'button'; b.dataset.v = v;
+      b.setAttribute('aria-pressed', String(state.focus === v));
+      const sw = el('span', 'tg-sw'); sw.style.background = M.colors[v];
+      b.append(sw, el('span', null, label), el('span', 'tg-lg-n', counts.has(v) ? fmt(counts.get(v)) : (lc.status === 'ok' ? '0' : '—')));
+      gEl.append(b);
+    });
+    return gEl;
+  }));
+}
+
+const NS = 'http://www.w3.org/2000/svg';
+const svgEl = (tag, attrs, text) => { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, String(v)); if (text != null) e.textContent = text; return e; };
+const marker = (id, color) => {
+  const m = svgEl('marker', { id, viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 6, markerHeight: 6, orient: 'auto-start-reverse' });
+  m.append(svgEl('path', { d: 'M0,0L10,5L0,10z', style: 'fill:' + color }));
+  return m;
+};
+const arrowLine = (x1, y1, x2, y2, color, mid) => svgEl('line', { x1, y1, x2, y2, style: 'stroke:' + color + ';stroke-width:2.2;stroke-linecap:round', 'marker-end': 'url(#' + mid + ')' });
+
+function drawMatrix(svg, g) {
+  const { r, c } = pays(g);
+  const ne = new Set(String(g.nash || '').split(' ').filter(Boolean).map((k) => CELL_IDX[k]));
+  const po = new Set(String(g.paretoOptimal || '').split(' ').filter(Boolean).map((k) => CELL_IDX[k]));
+  const x0 = 62, y0 = 30, cw = 96, ch = 70, gx = 40, gy = 40;
+  const pos = [[x0, y0], [x0 + cw + gx, y0], [x0, y0 + ch + gy], [x0 + cw + gx, y0 + ch + gy]];
+  svg.setAttribute('viewBox', '0 0 300 ' + (y0 + 2 * ch + gy + 6));
+  svg.replaceChildren();
+  const defs = svgEl('defs'); defs.append(marker('tg-m-r', 'var(--tg-row)'), marker('tg-m-c', 'var(--tg-col)')); svg.append(defs);
+  ['Left', 'Right'].forEach((t, j) => svg.append(svgEl('text', { x: pos[j][0] + cw / 2, y: 18, 'text-anchor': 'middle', style: 'fill:var(--tg-col);font-size:13px' }, t)));
+  ['Top', 'Bottom'].forEach((t, i) => svg.append(svgEl('text', { x: x0 - 8, y: pos[i * 2][1] + ch / 2 + 4, 'text-anchor': 'end', style: 'fill:var(--tg-row);font-size:13px' }, t)));
+  pos.forEach(([x, y], i) => {
+    const isNe = ne.has(i);
+    svg.append(svgEl('rect', { x, y, width: cw, height: ch, rx: 5, style: 'fill:' + (isNe ? famColor(g) : 'var(--color-bg)') + ';stroke:' + (isNe ? 'var(--color-fg)' : 'var(--color-border-line)') + ';stroke-width:' + (isNe ? 2.5 : 1) }));
+    const t = svgEl('text', { x: x + cw / 2, y: y + ch / 2 + 9, 'text-anchor': 'middle', style: 'font-size:25px;font-variant-numeric:tabular-nums;font-weight:' + (po.has(i) ? 700 : 400) });
+    const inkR = isNe ? '#b3261c' : 'var(--tg-row)'; const inkC = isNe ? '#1f47a8' : 'var(--tg-col)';
+    t.append(svgEl('tspan', { style: 'fill:' + inkR }, String(r[i])), svgEl('tspan', { style: 'fill:' + (isNe ? 'var(--tg-ink)' : 'var(--color-fg-muted)') }, ', '), svgEl('tspan', { style: 'fill:' + inkC }, String(c[i])));
+    svg.append(t);
+    if (isNe) svg.append(svgEl('text', { x: x + 6, y: y + 14, style: 'font-size:10px;fill:var(--tg-ink)' }, 'Nash'));
+  });
+  [0, 1].forEach((j) => {
+    const top = j, bot = 2 + j; const x = pos[j][0] + cw / 2;
+    const yTop = y0 + ch + 5, yBot = y0 + ch + gy - 5;
+    svg.append(r[top] > r[bot] ? arrowLine(x, yBot, x, yTop, 'var(--tg-row)', 'tg-m-r') : arrowLine(x, yTop, x, yBot, 'var(--tg-row)', 'tg-m-r'));
+  });
+  [0, 1].forEach((i) => {
+    const L = 2 * i, Rr = 2 * i + 1; const y = pos[L][1] + ch / 2;
+    const xL = x0 + cw + 5, xR = x0 + cw + gx - 5;
+    svg.append(c[L] > c[Rr] ? arrowLine(xR, y, xL, y, 'var(--tg-col)', 'tg-m-c') : arrowLine(xL, y, xR, y, 'var(--tg-col)', 'tg-m-c'));
+  });
+}
+
+function drawGraph(svg, g) {
+  const { r, c } = pays(g);
+  const ne = new Set(String(g.nash || '').split(' ').filter(Boolean).map((k) => CELL_IDX[k]));
+  const L = 44, R = 226, T = 14, B = 192;
+  const sx = (v) => L + (v - 1) * (R - L) / 3; const sy = (v) => B - (v - 1) * (B - T) / 3;
+  svg.setAttribute('viewBox', '0 0 248 230');
+  svg.replaceChildren();
+  const defs = svgEl('defs'); defs.append(marker('tg-g-r', 'var(--tg-row)'), marker('tg-g-c', 'var(--tg-col)')); svg.append(defs);
+  for (let v = 1; v <= 4; v++) {
+    svg.append(svgEl('line', { x1: sx(v), x2: sx(v), y1: T, y2: B, style: 'stroke:var(--cds-chart-grid);stroke-width:1' }));
+    svg.append(svgEl('line', { x1: L, x2: R, y1: sy(v), y2: sy(v), style: 'stroke:var(--cds-chart-grid);stroke-width:1' }));
+    svg.append(svgEl('text', { x: sx(v), y: B + 15, 'text-anchor': 'middle', style: 'fill:var(--color-fg-muted);font-size:11px' }, String(v)));
+    svg.append(svgEl('text', { x: L - 8, y: sy(v) + 4, 'text-anchor': 'end', style: 'fill:var(--color-fg-muted);font-size:11px' }, String(v)));
+  }
+  svg.append(svgEl('text', { x: (L + R) / 2, y: B + 33, 'text-anchor': 'middle', style: 'fill:var(--tg-row);font-size:12px' }, 'Row’s payoff'));
+  svg.append(svgEl('text', { x: 12, y: (T + B) / 2, 'text-anchor': 'middle', transform: 'rotate(-90 12 ' + (T + B) / 2 + ')', style: 'fill:var(--tg-col);font-size:12px' }, 'Column’s payoff'));
+  const pt = (i) => [sx(r[i]), sy(c[i])];
+  const arrow = (from, to, color, mid) => {
+    const [x1, y1] = pt(from); const [x2, y2] = pt(to);
+    const len = Math.hypot(x2 - x1, y2 - y1) || 1; const k = 10 / len;
+    svg.append(arrowLine(x1 + (x2 - x1) * k, y1 + (y2 - y1) * k, x2 - (x2 - x1) * k, y2 - (y2 - y1) * k, color, mid));
+  };
+  [[0, 2], [1, 3]].forEach(([a, b]) => (r[a] > r[b] ? arrow(b, a, 'var(--tg-row)', 'tg-g-r') : arrow(a, b, 'var(--tg-row)', 'tg-g-r')));
+  [[0, 1], [2, 3]].forEach(([a, b]) => (c[a] > c[b] ? arrow(b, a, 'var(--tg-col)', 'tg-g-c') : arrow(a, b, 'var(--tg-col)', 'tg-g-c')));
+  [0, 1, 2, 3].forEach((i) => {
+    const [x, y] = pt(i);
+    if (ne.has(i)) svg.append(svgEl('circle', { cx: x, cy: y, r: 9, style: 'fill:' + famColor(g) + ';stroke:var(--color-fg);stroke-width:2' }));
+    svg.append(svgEl('circle', { cx: x, cy: y, r: 4, style: 'fill:var(--color-fg)' }));
+    const right = x < R - 20;
+    svg.append(svgEl('text', { x: x + (right ? 12 : -12), y: y - 8, 'text-anchor': right ? 'start' : 'end', style: 'fill:var(--color-fg-muted);font-size:11px' }, CELLS[i]));
+  });
+}
+
+const DYN_TINTS = ['#4fae7f', '#e39a3b', '#8d7be0'];
+const DYN_TINT_NAMES = ['green', 'amber', 'violet'];
+const CORNER = { TL: [0, 1], TR: [1, 1], BL: [0, 0], BR: [1, 0] }; // [share of Column choosing Right, share of Row choosing Top]
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
+const P = { r2: 1 / 3, r3: 2 / 3, c2: 1 / 3, c3: 2 / 3, sep: false, mode: 'pay', dyn: 'rep', eta: 0.1 };
+// Each dynamic gives the change in the share x of a population's first strategy, given that strategy's payoff advantage d
+const DYNAMICS = {
+  rep: { label: 'Replicator', g: (x, d) => x * (1 - x) * d,
+    desc: 'Each strategy’s share grows in proportion to how much better than average it does: the classic model of reproduction, or of copying more successful players. All four corners are resting points, but only equilibria attract.' },
+  br: { label: 'Best response', g: (x, d) => (d > 0 ? 1 : d < 0 ? 0 : x) - x,
+    desc: 'At every moment a small share of each population switches to whichever strategy is currently best. Play moves in straight lines towards a corner and rests only at Nash equilibria.' },
+  logit: { label: 'Logit (noisy best response)', g: (x, d) => 1 / (1 + Math.exp(-d / P.eta)) - x,
+    desc: 'Best response with mistakes: players pick the better strategy more often the bigger its advantage, with the noise level setting how often they err. Resting points, the logit equilibria, sit inside the square and move towards the Nash equilibria as noise falls.' },
+  bnn: { label: 'Brown–von Neumann–Nash', g: (x, d) => (d > 0 ? (1 - x) * (1 - x) * d : x * x * d),
+    desc: 'Players switch to a strategy that beats their population’s average payoff, at a rate proportional to how far it beats it. Rests exactly at Nash equilibria.' },
+  smith: { label: 'Smith (pairwise comparison)', g: (x, d) => (d > 0 ? (1 - x) * d : x * d),
+    desc: 'Players compare their strategy with the other one and switch if the other pays more, at a rate proportional to the gain. Rests exactly at Nash equilibria.' },
+};
+function dynModel(g) {
+  const ranks = pays(g);
+  const vr = [0, P.r2, P.r3, 1]; const vc = P.sep ? [0, P.c2, P.c3, 1] : vr;
+  const r = ranks.r.map((k) => vr[k - 1]); const c = ranks.c.map((k) => vc[k - 1]);
+  const G = DYNAMICS[P.dyn].g;
+  const dRow = (u) => ((1 - u) * r[0] + u * r[1]) - ((1 - u) * r[2] + u * r[3]); // Top minus Bottom, with Column choosing Right at share u
+  const dCol = (w) => (w * c[1] + (1 - w) * c[3]) - (w * c[0] + (1 - w) * c[2]); // Right minus Left, with Row choosing Top at share w
+  const fw = (u, w) => G(w, dRow(u));
+  const fu = (u, w) => G(u, dCol(w));
+  const rk = (u, w, dt) => {
+    const a1 = fu(u, w), b1 = fw(u, w);
+    const a2 = fu(u + dt / 2 * a1, w + dt / 2 * b1), b2 = fw(u + dt / 2 * a1, w + dt / 2 * b1);
+    const a3 = fu(u + dt / 2 * a2, w + dt / 2 * b2), b3 = fw(u + dt / 2 * a2, w + dt / 2 * b2);
+    const a4 = fu(u + dt * a3, w + dt * b3), b4 = fw(u + dt * a3, w + dt * b3);
+    return [clamp01(u + dt / 6 * (a1 + 2 * a2 + 2 * a3 + a4)), clamp01(w + dt / 6 * (b1 + 2 * b2 + 2 * b3 + b4))];
+  };
+  return { r, c, fu, fw, rk, G, rankR: ranks.r, rankC: ranks.c };
+}
+const MIX_EPS = 0.01;
+const rankCoef = (k) => [[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]][k - 1];
+// Indifference line A*a + B*b + C = 0 in the player's middle values (a = rank 2, b = rank 3)
+function mixLine(ranks, t, who) {
+  const v = ranks.map(rankCoef);
+  const parts = who === 'row' ? [[v[0], 1 - t], [v[2], -(1 - t)], [v[1], t], [v[3], -t]] : [[v[0], t], [v[1], -t], [v[2], 1 - t], [v[3], -(1 - t)]];
+  return [0, 1, 2].map((i) => parts.reduce((sum, [x, wt]) => sum + wt * x[i], 0));
+}
+// 'row' payoffs set Column's share choosing Right; 'col' payoffs set Row's share choosing Top
+function mixOf(ranks, a, b, who) {
+  const x = ranks.map((k) => [0, a, b, 1][k - 1]);
+  return who === 'row' ? 1 - (x[3] - x[1]) / (x[0] - x[1] - x[2] + x[3]) : (x[3] - x[2]) / (x[0] - x[1] - x[2] + x[3]);
+}
+function mixReach(ranks, who) {
+  const vals = [[MIX_EPS, 2 * MIX_EPS], [MIX_EPS, 1 - MIX_EPS], [1 - 2 * MIX_EPS, 1 - MIX_EPS]].map(([a, b]) => mixOf(ranks, a, b, who));
+  return [Math.min(...vals), Math.max(...vals)];
+}
+function mixSolve(ranks, t, who, cur) {
+  const [A, B, C] = mixLine(ranks, t, who); let best = null, bd = Infinity;
+  const consider = (a, b) => {
+    if (!isFinite(a) || !isFinite(b) || a < MIX_EPS - 1e-9 || b > 1 - MIX_EPS + 1e-9 || b < a + MIX_EPS - 1e-9) return;
+    const d = (a - cur[0]) ** 2 + (b - cur[1]) ** 2; if (d < bd) { bd = d; best = [a, b]; }
+  };
+  if (Math.abs(B) > 1e-12) for (let k = 0; k <= 800; k++) { const a = MIX_EPS + (1 - 3 * MIX_EPS) * k / 800; consider(a, -(A * a + C) / B); }
+  if (Math.abs(A) > 1e-12) for (let k = 0; k <= 800; k++) { const b = 2 * MIX_EPS + (1 - 3 * MIX_EPS) * k / 800; consider(-(B * b + C) / A, b); }
+  return best;
+}
+const interior = (m, g) => {
+  if (g.dominance !== 'Neither') return null;
+  const r = m.r, c = m.c;
+  return { pTop: (c[3] - c[2]) / (c[0] - c[1] - c[2] + c[3]), qLeft: (r[3] - r[1]) / (r[0] - r[1] - r[2] + r[3]) };
+};
+const arrowHead = (x0, y0, x1, y1, h) => {
+  const a = Math.atan2(y1 - y0, x1 - x0);
+  return 'M' + x1 + ',' + y1 + 'L' + (x1 - h * Math.cos(a - 0.5)) + ',' + (y1 - h * Math.sin(a - 0.5)) + 'M' + x1 + ',' + y1 + 'L' + (x1 - h * Math.cos(a + 0.5)) + ',' + (y1 - h * Math.sin(a + 0.5));
+};
+
+function syncDynCtl() {
+  const sel = root.querySelector('#tg-dyn-sel'); if (sel.value !== P.dyn) sel.value = P.dyn;
+  root.querySelector('#tg-dyn-desc').textContent = DYNAMICS[P.dyn].desc;
+  const etaRow = root.querySelector('#tg-eta-row'); etaRow.hidden = P.dyn !== 'logit';
+  const eta = root.querySelector('#tg-eta'); if (document.activeElement !== eta) eta.value = String(P.eta);
+  etaRow.querySelector('output').textContent = P.eta.toFixed(2);
+}
+
+function drawDynamics(g, coarse) {
+  syncMix(); syncDynCtl();
+  const svg = root.querySelector('#tg-dyn-sq'); const txt = root.querySelector('#tg-dyn-txt');
+  const m = dynModel(g); const pct = d3.format('.0%');
+  const L = 44, T = 18, S = 236; const Wd = L + S + 20, Hd = T + S + 44;
+  svg.setAttribute('viewBox', '0 0 ' + Wd + ' ' + Hd); svg.replaceChildren();
+  const X = (u) => L + u * S; const Y = (w) => T + (1 - w) * S;
+  const sinks = String(g.nash || '').split(' ').filter(Boolean);
+  const mxRow = interior(m, g);
+  const us = mxRow ? 1 - mxRow.qLeft : null; const ws = mxRow ? mxRow.pTop : null;
+  const nashOnly = P.dyn !== 'rep' && P.dyn !== 'logit';
+  const dt = 0.08;
+  const settle = (u, w, maxSteps) => {
+    let au = u, aw = w;
+    for (let k = 1; k <= maxSteps; k++) {
+      [u, w] = m.rk(u, w, dt);
+      if (k % 40 === 0) { if (Math.hypot(u - au, w - aw) < 0.003) return [u, w, true]; au = u; aw = w; }
+    }
+    return [u, w, false];
+  };
+  const snap = (p) => {
+    if (P.dyn === 'logit') return p;
+    for (const k of sinks) { const cp = CORNER[k]; if (Math.hypot(p[0] - cp[0], p[1] - cp[1]) < 0.08) return [cp[0], cp[1]]; }
+    if (mxRow && nashOnly && Math.hypot(p[0] - us, p[1] - ws) < 0.06) return [us, ws];
+    return p;
+  };
+  svg.append(svgEl('rect', { x: L, y: T, width: S, height: S, style: 'fill:var(--color-bg)' }));
+
+  // Find where play ends up from a grid of starting mixes
+  let attractors = []; let cyclesForever = false;
+  if (sinks.length === 0 && mxRow) {
+    // No pure equilibrium: follow one long path to see whether play spirals into the mixed point or keeps circling
+    let u = us, w = Math.min(0.97, ws + 0.4 * (1 - ws)); const d0 = Math.hypot(u - us, w - ws);
+    const ddt = P.dyn === 'br' ? 0.02 : 0.05;
+    for (let k = 0; k < 12000; k++) [u, w] = m.rk(u, w, ddt);
+    const d1 = Math.hypot(u - us, w - ws);
+    if (d1 < 0.1 * d0) { const p = P.dyn === 'logit' ? [u, w] : [us, ws]; attractors = [{ p, n: 1, share: 1 }]; svg.append(svgEl('rect', { x: L, y: T, width: S, height: S, style: 'fill:' + DYN_TINTS[0] + ';opacity:.2' })); }
+    else cyclesForever = true;
+  } else {
+    const N = coarse ? 22 : 36; const cs = S / N; const cellAtt = [];
+    for (let a = 0; a < N; a++) {
+      for (let b = 0; b < N; b++) {
+        const [u, w, ok] = settle((a + 0.5) / N, (b + 0.5) / N, 1500);
+        let idx = -1;
+        if (ok) {
+          const p = snap([u, w]);
+          idx = attractors.findIndex((t) => Math.hypot(t.p[0] - p[0], t.p[1] - p[1]) < 0.04);
+          if (idx < 0) { attractors.push({ p, n: 0 }); idx = attractors.length - 1; }
+          attractors[idx].n++;
+        }
+        cellAtt.push([a, b, idx]);
+      }
+    }
+    // Keep only stable resting points: small pushes must come back
+    attractors.forEach((t) => {
+      t.stable = [[0.03, 0], [-0.03, 0], [0, 0.03], [0, -0.03]].every(([du, dw]) => {
+        const [u, w, ok] = settle(clamp01(t.p[0] + du), clamp01(t.p[1] + dw), 1500);
+        if (!ok) return false; const q = snap([u, w]); return Math.hypot(q[0] - t.p[0], q[1] - t.p[1]) < 0.06;
+      });
+    });
+    const keep = attractors.map((t, i) => (t.stable ? i : -1)).filter((i) => i >= 0)
+      .sort((i, j) => attractors[j].n - attractors[i].n).slice(0, DYN_TINTS.length);
+    const remap = new Map(keep.map((i, k) => [i, k]));
+    const total = N * N;
+    attractors = keep.map((i) => ({ p: attractors[i].p, n: attractors[i].n, share: attractors[i].n / total }));
+    cellAtt.forEach(([a, b, idx]) => {
+      const k = remap.has(idx) ? remap.get(idx) : -1;
+      if (k >= 0) svg.append(svgEl('rect', { x: X(a / N), y: Y((b + 1) / N), width: cs + 0.4, height: cs + 0.4, style: 'fill:' + DYN_TINTS[k] + ';opacity:' + (attractors.length > 1 ? 0.24 : 0.2) }));
+    });
+  }
+  svg.append(svgEl('rect', { x: L, y: T, width: S, height: S, style: 'fill:none;stroke:var(--color-border-line);stroke-width:1' }));
+
+  // Vector field
+  const n = 9; const vecs = []; let maxS = 0;
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+    const u = (i + 0.5) / n, w = (j + 0.5) / n; const du = m.fu(u, w), dw = m.fw(u, w); const sp = Math.hypot(du, dw);
+    maxS = Math.max(maxS, sp); vecs.push([u, w, du, dw, sp]);
+  }
+  vecs.forEach(([u, w, du, dw, sp]) => {
+    if (sp < 1e-9 || maxS === 0) return;
+    const len = (0.3 + 0.7 * Math.sqrt(sp / maxS)) * (S / n) * 0.42;
+    const dx = du / sp * len, dy = -dw / sp * len;
+    const x0 = X(u) - dx / 2, y0 = Y(w) - dy / 2, x1 = X(u) + dx / 2, y1 = Y(w) + dy / 2;
+    svg.append(svgEl('path', { d: 'M' + x0 + ',' + y0 + 'L' + x1 + ',' + y1 + arrowHead(x0, y0, x1, y1, 3.4), style: 'fill:none;stroke:var(--color-fg-muted);stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round' }));
+  });
+
+  // Sample paths
+  const traj = (u, w, h, steps, stop) => { const pts = [[u, w]]; for (let k = 0; k < steps; k++) { [u, w] = m.rk(u, w, h); pts.push([u, w]); if (stop && stop(u, w)) break; } return pts; };
+  const poly = (pts, style) => svg.append(svgEl('polyline', { points: pts.map(([u, w]) => X(u).toFixed(1) + ',' + Y(w).toFixed(1)).join(' '), style }));
+  if (sinks.length === 0 && mxRow) {
+    [0.3, 0.55, 0.8].forEach((f) => {
+      const u0 = us, w0 = ws + f * (1 - ws);
+      if (P.dyn === 'rep') {
+        let ang = 0, prev = Math.atan2(w0 - ws, u0 - us);
+        poly(traj(u0, w0, 0.04, 6000, (u, w) => { const a = Math.atan2(w - ws, u - us); let d = a - prev; if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; ang += d; prev = a; return Math.abs(ang) >= 2 * Math.PI; }), 'fill:none;stroke:var(--color-fg);stroke-width:1.3;opacity:.7');
+      } else {
+        poly(traj(u0, w0, P.dyn === 'br' ? 0.02 : 0.04, 6000, (u, w) => Math.hypot(u - us, w - ws) < 0.01), 'fill:none;stroke:var(--color-fg);stroke-width:1.1;opacity:.55');
+      }
+    });
+  } else {
+    let au = 0, aw = 0, cnt = 0;
+    const still = (u, w) => { cnt++; if (cnt % 40 === 0) { const d = Math.hypot(u - au, w - aw); au = u; aw = w; return d < 0.002; } return false; };
+    [[0.08, 0.5], [0.92, 0.5], [0.5, 0.08], [0.5, 0.92], [0.2, 0.2], [0.8, 0.8], [0.2, 0.8], [0.8, 0.2]].forEach(([u0, w0]) => {
+      cnt = 0; au = u0; aw = w0;
+      poly(traj(u0, w0, dt, 1200, still), 'fill:none;stroke:var(--color-fg);stroke-width:1.1;opacity:.45');
+    });
+  }
+
+  // Dividing line through the saddle (replicator only, where it has a clean formula)
+  if (P.dyn === 'rep' && sinks.length === 2 && mxRow) {
+    const al = ws * (1 - ws) * ((m.r[1] - m.r[0]) - (m.r[3] - m.r[2]));
+    const be = us * (1 - us) * ((m.c[1] - m.c[3]) - (m.c[0] - m.c[2]));
+    if (al * be > 0) {
+      const lam = -Math.sqrt(al * be); let vu = be, vw = lam; const nn = Math.hypot(vu, vw); vu /= nn; vw /= nn;
+      [1, -1].forEach((sg) => {
+        const pts = traj(us + sg * 0.002 * vu, ws + sg * 0.002 * vw, -0.04, 4000, (u, w) => u <= 0.0005 || u >= 0.9995 || w <= 0.0005 || w >= 0.9995);
+        pts.unshift([us, ws]);
+        poly(pts, 'fill:none;stroke:var(--color-fg);stroke-width:1.8;stroke-dasharray:5 4');
+      });
+    }
+  }
+
+  // Resting points and labels
+  const r = m.rankR, c = m.rankC;
+  const isAtt = (p) => attractors.some((t) => Math.hypot(t.p[0] - p[0], t.p[1] - p[1]) < 0.02);
+  Object.entries(CORNER).forEach(([k, [u, w]]) => {
+    const i = CELL_IDX[k]; const att = isAtt([u, w]);
+    if (att) svg.append(svgEl('circle', { cx: X(u), cy: Y(w), r: 5.5, style: 'fill:var(--color-fg);stroke:var(--color-panel);stroke-width:1.5' }));
+    else if (P.dyn === 'rep') svg.append(svgEl('circle', { cx: X(u), cy: Y(w), r: 3.5, style: 'fill:var(--color-panel);stroke:var(--color-fg-muted);stroke-width:1.3' }));
+    const lab = svgEl('text', { x: X(u) + (u ? -9 : 9), y: Y(w) + (w ? 15 : -8), 'text-anchor': u ? 'end' : 'start', style: 'font-size:11px;fill:var(--color-fg);font-weight:' + (sinks.includes(k) ? 700 : 400) });
+    lab.append(svgEl('tspan', { style: 'fill:var(--tg-row)' }, String(r[i])), ',', svgEl('tspan', { style: 'fill:var(--tg-col)' }, String(c[i])));
+    svg.append(lab);
+  });
+  attractors.forEach((t) => {
+    const atCorner = Object.values(CORNER).some(([u, w]) => Math.hypot(t.p[0] - u, t.p[1] - w) < 0.02);
+    if (!atCorner) svg.append(svgEl('circle', { cx: X(t.p[0]), cy: Y(t.p[1]), r: 5.5, style: 'fill:var(--color-fg);stroke:var(--color-panel);stroke-width:1.5' }));
+  });
+  if (mxRow) {
+    svg.append(svgEl('path', { d: 'M' + X(us) + ',' + Y(ws) + 'V' + (T + S) + 'M' + X(us) + ',' + Y(ws) + 'H' + L, style: 'fill:none;stroke:var(--color-fg-muted);stroke-width:1;stroke-dasharray:1 3' }));
+    if (!isAtt([us, ws])) svg.append(svgEl('circle', { cx: X(us), cy: Y(ws), r: 4.5, style: 'fill:var(--color-panel);stroke:var(--color-fg);stroke-width:1.6' }));
+    svg.append(svgEl('text', { x: X(us), y: T + S + 14, 'text-anchor': 'middle', style: 'font-size:10px;font-weight:700;fill:var(--tg-col)' }, pct(us)));
+    svg.append(svgEl('text', { x: L - 6, y: Y(ws) + 4, 'text-anchor': 'end', style: 'font-size:10px;font-weight:700;fill:var(--tg-row)' }, pct(ws)));
+  }
+  const farX = (v) => !mxRow || Math.abs(us - v) > 0.13; const farY = (v) => !mxRow || Math.abs(ws - v) > 0.07;
+  if (farX(0)) svg.append(svgEl('text', { x: L, y: T + S + 14, 'text-anchor': 'middle', style: 'font-size:10px;fill:var(--color-fg-muted)' }, '0%'));
+  if (farX(1)) svg.append(svgEl('text', { x: L + S, y: T + S + 14, 'text-anchor': 'middle', style: 'font-size:10px;fill:var(--color-fg-muted)' }, '100%'));
+  svg.append(svgEl('text', { x: L + S / 2, y: T + S + 32, 'text-anchor': 'middle', style: 'font-size:11px;fill:var(--tg-col)' }, 'Column players choosing Right'));
+  if (farY(0)) svg.append(svgEl('text', { x: L - 6, y: T + S + 4, 'text-anchor': 'end', style: 'font-size:10px;fill:var(--color-fg-muted)' }, '0%'));
+  if (farY(1)) svg.append(svgEl('text', { x: L - 6, y: T + 4, 'text-anchor': 'end', style: 'font-size:10px;fill:var(--color-fg-muted)' }, '100%'));
+  svg.append(svgEl('text', { x: 12, y: T + S / 2, 'text-anchor': 'middle', transform: 'rotate(-90 12 ' + (T + S / 2) + ')', style: 'font-size:11px;fill:var(--tg-row)' }, 'Row players choosing Top'));
+  svg.setAttribute('aria-label', DYNAMICS[P.dyn].label + ' dynamics of ' + g.name + ' with two populations');
+
+  // Summary in words
+  const describe = (p) => {
+    for (const [k, cp] of Object.entries(CORNER)) {
+      const d = Math.hypot(p[0] - cp[0], p[1] - cp[1]); const i = CELL_IDX[k];
+      if (d < 0.01) return 'the ' + CELL_NAME[k] + ' outcome (' + r[i] + ',' + c[i] + ')';
+      if (d < 0.15) return 'a point near the ' + CELL_NAME[k] + ' outcome (' + r[i] + ',' + c[i] + '), with ' + pct(p[1]) + ' of Row players choosing Top and ' + pct(p[0]) + ' of Column players choosing Right';
+    }
+    return 'a mix with ' + pct(p[1]) + ' of Row players choosing Top and ' + pct(p[0]) + ' of Column players choosing Right';
+  };
+  const mixTxt = mxRow ? ' The mixed Nash equilibrium (open circle when it isn’t a resting point) has ' + pct(ws) + ' of Row players choosing Top and ' + pct(us) + ' of Column players choosing Right.' : '';
+  let out;
+  if (cyclesForever) out = 'No stable resting point: play keeps circling the mixed equilibrium, where ' + pct(ws) + ' of Row players choose Top and ' + pct(us) + ' of Column players choose Right, in closed loops that never settle.';
+  else if (attractors.length === 0) out = 'Play doesn’t settle anywhere within the simulated time.' + mixTxt;
+  else if (attractors.length === 1) out = (sinks.length === 0 ? 'Play spirals in to ' : 'Every starting mix ends at ') + describe(attractors[0].p) + '.' + (sinks.length === 0 ? '' : mixTxt);
+  else {
+    out = attractors.length + ' stable outcomes: ' + attractors.map((t, k) => describe(t.p) + ', shaded ' + DYN_TINT_NAMES[k]).join('; ') + '.';
+    out += ' About ' + attractors.map((t, k) => pct(t.share) + ' of starting mixes end in the ' + DYN_TINT_NAMES[k] + ' basin').join(' and ') + '.';
+    out += mixTxt + (P.dyn === 'rep' && mxRow ? ' Here it is a saddle, and the dashed line through it divides the basins.' : '');
+  }
+  txt.textContent = out;
+
+  const one = root.querySelector('#tg-dyn-one');
+  const isSym = String(g.mirror) === String(g.game);
+  one.hidden = !isSym;
+  if (isSym) drawOnePop(g, m, attractors, sinks);
+}
+
+function drawOnePop(g, m, attractors, sinks) {
+  const svg = root.querySelector('#tg-dyn-line'); const txt = root.querySelector('#tg-dyn-one-txt');
+  const r = m.r; const pct = d3.format('.0%'); const rr = m.rankR;
+  if (P.sep && (P.r2 !== P.c2 || P.r3 !== P.c3)) { svg.replaceChildren(); svg.setAttribute('viewBox', '0 0 300 1'); txt.textContent = 'With different values for Row and Column the game is no longer symmetric, so a single population doesn’t apply. Use the same values for both to see it.'; return; }
+  const L = 44, S = 236, Wd = L + S + 20, Hd = 62, y = 24;
+  svg.setAttribute('viewBox', '0 0 ' + Wd + ' ' + Hd); svg.replaceChildren();
+  const X = (s) => L + s * S;
+  const adv = (s) => (s * r[1] + (1 - s) * r[0]) - (s * r[3] + (1 - s) * r[2]); // A minus B when a share s plays A
+  const f = (s) => m.G(s, adv(s));
+  // Resting points: ends where nothing moves, and sign changes inside
+  const rest = [];
+  if (Math.abs(f(0)) < 1e-9) rest.push({ s: 0, stable: f(0.001) < 0 });
+  let ps = 0.002, pv = f(ps);
+  for (let k = 1; k <= 500; k++) {
+    const s = 0.002 + 0.996 * k / 500; const v = f(s);
+    if ((pv > 0 && v < 0) || (pv < 0 && v > 0)) {
+      let lo = ps, hi = s; for (let it = 0; it < 50; it++) { const mid = (lo + hi) / 2; const fm = f(mid); if ((fm > 0) === (pv > 0)) lo = mid; else hi = mid; }
+      rest.push({ s: (lo + hi) / 2, stable: pv > 0 && v < 0 });
+    }
+    ps = s; pv = v;
+  }
+  if (Math.abs(f(1)) < 1e-9) rest.push({ s: 1, stable: f(0.999) > 0 });
+  const tintOf = (s) => {
+    if (!attractors.length) return DYN_TINTS[0];
+    let best = 0, bd = Infinity; attractors.forEach((t, k) => { const d = Math.hypot(t.p[0] - s, t.p[1] - s); if (d < bd) { bd = d; best = k; } });
+    return DYN_TINTS[best];
+  };
+  const bounds = [0, ...rest.map((p) => p.s).filter((s) => s > 0 && s < 1), 1];
+  for (let k = 0; k < bounds.length - 1; k++) {
+    const a = bounds[k], b = bounds[k + 1]; const dir = Math.sign(f((a + b) / 2));
+    const destS = dir > 0 ? b : a; const dest = rest.find((p) => Math.abs(p.s - destS) < 1e-6 && p.stable);
+    const color = dest ? tintOf(dest.s) : 'var(--color-border-line)';
+    svg.append(svgEl('line', { x1: X(a), y1: y, x2: X(b), y2: y, style: 'stroke:' + color + ';stroke-width:7;opacity:.45;stroke-linecap:butt' }));
+    if (dir !== 0 && X(b) - X(a) > 14) {
+      const mid = X((a + b) / 2); const h = 5;
+      svg.append(svgEl('path', { d: 'M' + (mid - dir * h) + ',' + (y - h) + 'L' + (mid + dir * h) + ',' + y + 'L' + (mid - dir * h) + ',' + (y + h), style: 'fill:none;stroke:var(--color-fg);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round' }));
+    }
+  }
+  svg.append(svgEl('line', { x1: X(0), y1: y, x2: X(1), y2: y, style: 'stroke:var(--color-fg-muted);stroke-width:1' }));
+  rest.forEach((p) => {
+    svg.append(svgEl('circle', { cx: X(p.s), cy: y, r: p.stable ? 5.5 : 4.5, style: p.stable ? 'fill:var(--color-fg);stroke:var(--color-panel);stroke-width:1.5' : 'fill:var(--color-panel);stroke:var(--color-fg);stroke-width:1.6' }));
+    if (p.s > 0.04 && p.s < 0.96) svg.append(svgEl('text', { x: X(p.s), y: y - 11, 'text-anchor': 'middle', style: 'font-size:10px;fill:var(--color-fg)' }, pct(p.s) + ' A'));
+  });
+  svg.append(svgEl('text', { x: X(0), y: y + 22, 'text-anchor': 'start', style: 'font-size:10px;fill:var(--color-fg-muted)' }, 'All B (' + rr[2] + ',' + rr[2] + ')'));
+  svg.append(svgEl('text', { x: X(1), y: y + 22, 'text-anchor': 'end', style: 'font-size:10px;fill:var(--color-fg-muted)' }, 'All A (' + rr[1] + ',' + rr[1] + ')'));
+  const name = (s) => (s >= 0.995 ? 'all A (' + rr[1] + ',' + rr[1] + ')' : s <= 0.005 ? 'all B (' + rr[2] + ',' + rr[2] + ')' : pct(s) + ' playing A');
+  const st = rest.filter((p) => p.stable); const un = rest.filter((p) => !p.stable && p.s > 0 && p.s < 1);
+  let out;
+  if (st.length === 1) {
+    const s = st[0].s;
+    out = (s > 0.005 && s < 0.995 ? 'The population settles at a stable mix with ' + pct(s) + ' playing A.' : 'Everyone ends up at ' + name(s) + '.');
+    if (P.dyn === 'rep' && sinks.length === 2 && s > 0.005 && s < 0.995) out += ' In one population this mixed state is evolutionarily stable, though with two separate populations the same point is a saddle.';
+  } else if (st.length >= 2 && un.length) {
+    out = 'An unstable threshold at ' + pct(un[0].s) + ' playing A. Above it the population moves to ' + name(st[st.length - 1].s) + '; below it, to ' + name(st[0].s) + '.';
+  } else if (st.length >= 2) {
+    out = 'Stable states at ' + st.map((p) => name(p.s)).join(' and ') + '.';
+  } else {
+    out = 'No stable state on this line.';
+  }
+  txt.textContent = out;
+}
+
+function chipButton(id, cls) {
+  const g = byGame.get(String(id));
+  const b = el('button', cls || 'tg-chipbtn'); b.type = 'button'; b.dataset.go = String(id);
+  if (!g) { b.textContent = String(id); return b; }
+  const chip = el('span', 'tg-chip', g.abbr); chip.style.background = famColor(g);
+  b.append(chip);
+  return b;
+}
+
+function drawDetail() {
+  const sym = root.querySelector('#tg-sym'); const dname = root.querySelector('#tg-dname'); const dsub = root.querySelector('#tg-dsub');
+  const facts = root.querySelector('#tg-facts'); const nbrs = root.querySelector('#tg-nbrs'); const note = root.querySelector('#tg-note');
+  const mx = root.querySelector('#tg-mx'); const gr = root.querySelector('#tg-gr');
+  const g = byGame.get(state.sel);
+  if (!g) {
+    sym.textContent = ''; sym.style.background = 'transparent'; dname.textContent = '—'; dsub.textContent = '';
+    facts.replaceChildren(); nbrs.replaceChildren(); note.textContent = ''; mx.replaceChildren(); gr.replaceChildren();
+    return;
+  }
+  sym.textContent = g.abbr; sym.style.background = famColor(g);
+  dname.textContent = g.name;
+  dsub.textContent = 'Game ' + g.game + ': layer ' + g.layer + ', Row pattern ' + g.row + ', Column pattern ' + g.col;
+  const dynOn = state.dview === 'dyn';
+  root.querySelector('#tg-payfigs').hidden = dynOn; root.querySelector('#tg-dyn').hidden = !dynOn;
+  if (dynOn) drawDynamics(g); else { drawMatrix(mx, g); drawGraph(gr, g); }
+  mx.setAttribute('aria-label', 'Payoff matrix of ' + g.name);
+  gr.setAttribute('aria-label', 'Outcomes of ' + g.name + ' plotted by payoff');
+
+  const { r, c } = pays(g);
+  const rows = [];
+  const famDd = el('dd'); const fsw = el('span', 'tg-chip', ''); fsw.style.background = famColor(g); fsw.style.minWidth = '.95rem'; fsw.style.height = '.95rem'; fsw.style.marginRight = '6px'; fsw.style.verticalAlign = '-2px';
+  famDd.append(fsw, famLabel(g));
+  rows.push(['Binomial name', g.binomial + ' (' + g.binomialName + ')']);
+  rows.push(['Rapoport–Guyer number', String(g.rapoportGuyer)]);
+  rows.push(['Family', famDd]);
+  rows.push(['Nash equilibria', neText(g)]);
+  const rd = g.rowDominant, cd = g.colDominant;
+  const domText = !rd && !cd ? 'Neither player' : [rd ? 'Row plays ' + rd.toLowerCase() : 'Row has none', cd ? 'Column plays ' + cd.toLowerCase() : 'Column has none'].join('; ');
+  rows.push(['Dominant strategies', domText]);
+  if (g.nash) {
+    const po = new Set(String(g.paretoOptimal).split(' '));
+    const bad = String(g.nash).split(' ').filter((k) => !po.has(k));
+    if (bad.length) {
+      const i = CELL_IDX[bad[0]];
+      const better = [0, 1, 2, 3].filter((j) => r[j] >= r[i] && c[j] >= c[i] && (r[j] > r[i] || c[j] > c[i]));
+      rows.push(['Pareto-deficient', 'Yes, both prefer ' + better.map((j) => CELL_NAME[CELLS[j]] + ' (' + r[j] + ',' + c[j] + ')').join(' or ') + ' to the ' + CELL_NAME[bad[0]] + ' equilibrium']);
+    } else {
+      rows.push(['Pareto-deficient', 'No']);
+    }
+  }
+  const mxRow = mixedById().get(String(g.game));
+  if (mxRow) {
+    const pct = d3.format('.0%'); const num = d3.format('.2~f');
+    rows.push(['Mixed equilibrium', 'Row plays top ' + pct(mxRow.pTop) + ', Column plays left ' + pct(mxRow.qLeft) + '; expected payoffs ' + num(mxRow.rowValue) + ', ' + num(mxRow.colValue) + ' (ranks as payoffs)']);
+  } else {
+    rows.push(['Mixed equilibrium', 'None, a dominant strategy settles play']);
+  }
+  const sw = Number(g.swapsToWinWin);
+  rows.push(['Swaps to win-win', sw === 0 ? 'Already win-win' : sw === 1 ? 'One' : sw === 2 ? 'Two' : 'Three']);
+  if (String(g.mirror) === String(g.game) || g.symmetric === true || g.symmetric === 'true') {
+    rows.push(['Players swapped', 'Symmetric, the same game']);
+  } else {
+    const dd = el('dd'); const b = chipButton(g.mirror);
+    const mg = byGame.get(String(g.mirror));
+    b.append(el('span', 'tg-chipname', 'Game ' + g.mirror + (mg ? ', ' + mg.name : '')));
+    dd.append(b); rows.push(['Players swapped', dd]);
+  }
+  facts.replaceChildren();
+  rows.forEach(([k, v]) => { facts.append(el('dt', null, k)); facts.append(typeof v === 'string' ? el('dd', null, v) : v); });
+
+  nbrs.replaceChildren(...SWAPS.map(([key, who, sw2]) => {
+    const id = String(g[key]); const ng = byGame.get(id);
+    const b = chipButton(id, 'tg-nb');
+    b.prepend(el('span', 'tg-nb-k ' + (who === 'Row' ? 'tg-r' : 'tg-c'), who + ' ' + sw2));
+    b.append(el('span', 'tg-nb-n', id + (ng ? ' ' + ng.name : '') + (state.fold && ng && !isKept(ng) ? ', shown as ' + ng.mirror : '')));
+    b.setAttribute('aria-label', who + ' swaps payoffs ' + sw2 + ': ' + (ng ? ng.name + ', game ' + id : 'game ' + id));
+    return b;
+  }));
+  note.textContent = g.note || '';
+}
+
+function mixedById() {
+  const m = dash.data('mixed');
+  const out = new Map();
+  if (m.status === 'ok' && Array.isArray(m.data)) m.data.forEach((x) => out.set(String(x.game), x));
+  return out;
+}
+
+function mixedCard(x, g) {
+  const pct = d3.format('.0%'); const num = d3.format('.2~f');
+  const b = el('button', 'tg-mc'); b.type = 'button'; b.dataset.go = String(g.game);
+  b.setAttribute('aria-pressed', String(state.sel === String(g.game)));
+  const h = el('div', 'tg-mc-h'); const chip = el('span', 'tg-chip', g.abbr); chip.style.background = famColor(g);
+  h.append(chip, el('span', 'tg-mc-name', g.name), el('span', 'tg-mc-num', g.binomial + ' ' + g.game));
+  const bar = (p, cls) => {
+    const d = el('div', 'tg-bar'); const a = el('span', cls + '1'); a.style.width = (p * 100) + '%';
+    const z = el('span', cls + '2'); z.style.flex = '1'; d.append(a, z); return d;
+  };
+  const mix = el('div', 'tg-mix');
+  mix.append(el('span', 'tg-mix-who', 'Row'), bar(x.pTop, 'tg-bar-r'), el('span', 'tg-mix-v', 'Top ' + pct(x.pTop)));
+  mix.append(el('span', 'tg-mix-who', 'Column'), bar(x.qLeft, 'tg-bar-c'), el('span', 'tg-mix-v', 'Left ' + pct(x.qLeft)));
+  const ev = el('div', 'tg-mc-ev');
+  ev.append('Expected payoffs ', el('span', 'tg-red', num(x.rowValue)), ', ', el('span', 'tg-blue', num(x.colValue)));
+  b.append(h, mix, ev);
+  if (g.nashCount === 2) {
+    const pure = String(g.nashPayoffs).split(' ').map((s) => s.split(',').map(Number));
+    if (pure.every((p) => x.rowValue < p[0] && x.colValue < p[1])) b.append(el('div', 'tg-mc-flag', 'Both do worse than at either pure equilibrium'));
+  }
+  b.setAttribute('aria-label', g.name + ', game ' + g.game + ': Row plays Top ' + pct(x.pTop) + ', Column plays Left ' + pct(x.qLeft));
+  b.hidden = !matchesQ(g);
+  return b;
+}
+
+function drawMixed() {
+  const two = root.querySelector('#tg-mx-two'); const only = root.querySelector('#tg-mx-only');
+  const mx = mixedById();
+  if (!mx.size || !byGame.size) { two.replaceChildren(); only.replaceChildren(); return; }
+  const famOrder = Object.keys(FAMILY_COLORS);
+  const items = [...mx.values()].map((x) => [x, byGame.get(String(x.game))]).filter(([, g]) => g)
+    .sort((a, b) => famOrder.indexOf(a[1].subfamily) - famOrder.indexOf(b[1].subfamily) || Number(a[1].game) - Number(b[1].game));
+  two.replaceChildren(...items.filter(([, g]) => g.nashCount === 2).map(([x, g]) => mixedCard(x, g)));
+  only.replaceChildren(...items.filter(([, g]) => g.nashCount === 0).map(([x, g]) => mixedCard(x, g)));
+}
+
+function applyView() {
+  const mixed = state.view === 'mixed';
+  tableEl.hidden = mixed; mixedEl.hidden = !mixed;
+  syncCtls(); tip.hidden = true; syncButtons();
+  if (!mixed) { paint(); drawDetail(); drawLegend(); }
+  if (mixed) {
+    const mx = mixedById();
+    if (mx.size && !mx.has(state.sel)) state.sel = mx.has('122') ? '122' : [...mx.keys()][0];
+    drawMixed(); paint(); drawDetail();
+  }
+}
+
+function select(id, focus) {
+  id = repId(String(id));
+  if (!byGame.has(id)) return;
+  state.sel = id;
+  paint(); drawDetail();
+  mixedEl.querySelectorAll('.tg-mc').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.go === state.sel)));
+  if (focus) { const b = cells.get(id); if (b) b.focus(); }
+}
+
+function showTip(b) {
+  const g = byGame.get(b.dataset.game); if (!g) return;
+  tip.replaceChildren(
+    el('div', 'tg-tip-t', g.abbr + '  ' + g.name),
+    el('div', 'tg-tip-k', g.binomial + ': ' + g.binomialName),
+    el('div', 'tg-tip-k', 'Game ' + g.game + ', ' + famLabel(g)),
+    el('div', null, 'Equilibria: ' + neText(g)),
+  );
+  if (state.fold) tip.append(el('div', 'tg-tip-k', 'Rapoport–Guyer number ' + g.rapoportGuyer));
+  if (state.fold && String(g.mirror) !== String(g.game)) tip.append(el('div', 'tg-tip-k', 'Also stands for game ' + g.mirror + ', players swapped'));
+  tip.hidden = false;
+  const br = board.getBoundingClientRect(); const cr = b.getBoundingClientRect();
+  const w = tip.offsetWidth; const h = tip.offsetHeight;
+  let left = cr.left - br.left + cr.width / 2 - w / 2;
+  left = Math.max(0, Math.min(left, br.width - w));
+  let top = cr.bottom - br.top + 6;
+  if (top + h > br.height) top = cr.top - br.top - h - 6;
+  tip.style.left = left + 'px'; tip.style.top = Math.max(0, top) + 'px';
+}
+
+grid.addEventListener('click', (e) => { const b = e.target.closest('.tg-cell'); if (b) select(b.dataset.game, false); });
+grid.addEventListener('pointerover', (e) => { const b = e.target.closest('.tg-cell'); if (b) showTip(b); });
+grid.addEventListener('pointerleave', () => { tip.hidden = true; });
+grid.addEventListener('focusout', () => { tip.hidden = true; });
+grid.addEventListener('keydown', (e) => {
+  const b = e.target.closest('.tg-cell'); if (!b) return;
+  const d = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] }[e.key];
+  if (!d) return;
+  e.preventDefault();
+  let vr = Number(b.dataset.vr); let vc = Number(b.dataset.vc);
+  for (let k = 0; k < 12; k++) {
+    vr = (vr + d[0] + 12) % 12; vc = (vc + d[1] + 12) % 12;
+    const id = posMap.get(vr * 12 + vc); const g = byGame.get(id);
+    if (g && !(state.fold && !isKept(g))) { select(id, true); showTip(cells.get(id)); break; }
+  }
+});
+mixedEl.addEventListener('click', (e) => { const b = e.target.closest('[data-go]'); if (b) select(b.dataset.go, false); });
+viewEl.addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b || b.dataset.v === state.view) return;
+  state.view = b.dataset.v; applyView();
+});
+detailEl.addEventListener('click', (e) => { const b = e.target.closest('[data-go]'); if (b) select(b.dataset.go, false); });
+legendEl.addEventListener('click', (e) => {
+  const b = e.target.closest('.tg-lg-item'); if (!b) return;
+  state.focus = state.focus === b.dataset.v ? null : b.dataset.v;
+  paint(); drawLegend();
+});
+modeEl.addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b || b.dataset.v === state.mode) return;
+  state.mode = b.dataset.v; state.focus = null; syncButtons(); paint(); drawLegend();
+});
+orderEl.addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b || b.dataset.v === state.order) return;
+  state.order = b.dataset.v; syncButtons();
+  if (builtFor) { build(builtFor); builtOrder = state.order; paint(); }
+});
+const slRows = [...root.querySelectorAll('#tg-payset .tg-sl-row')];
+const sepEl = root.querySelector('#tg-sl-sep');
+function syncSliders() {
+  slRows.forEach((row) => {
+    const k = row.dataset.k; const inp = row.querySelector('input'); const out = row.querySelector('output');
+    inp.value = String(P[k]); out.textContent = P[k].toFixed(2);
+    if (k[0] === 'c') { row.hidden = !P.sep; return; }
+    const lab = row.querySelector('.tg-sl-l');
+    lab.textContent = (P.sep ? 'Row’s second-' : 'Second-') + (k === 'r2' ? 'worst (rank 2)' : 'best (rank 3)');
+    lab.classList.toggle('tg-red', P.sep);
+  });
+  sepEl.checked = P.sep;
+  root.querySelector('#tg-payset').hidden = P.mode === 'mix';
+  root.querySelector('#tg-mixset').hidden = P.mode !== 'mix';
+  root.querySelectorAll('#tg-sl-mode button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === P.mode)));
+  syncMix();
+}
+function syncMix() {
+  if (P.mode !== 'mix') return;
+  const g = byGame.get(state.sel);
+  const has = !!g && g.dominance === 'Neither';
+  root.querySelector('#tg-mix-ctl').hidden = !has; root.querySelector('#tg-mix-none').hidden = has;
+  if (!has) return;
+  const pct = d3.format('.0%'); const ranks = pays(g);
+  const cur = { row: mixOf(ranks.r, P.r2, P.r3, 'row'), col: mixOf(ranks.c, P.c2, P.c3, 'col') };
+  root.querySelectorAll('#tg-mixset .tg-sl-row').forEach((row) => {
+    const who = row.dataset.m; const inp = row.querySelector('input');
+    if (document.activeElement !== inp) inp.value = String(cur[who]);
+    row.querySelector('output').textContent = pct(cur[who]);
+    const [lo, hi] = mixReach(who === 'row' ? ranks.r : ranks.c, who);
+    root.querySelector('#tg-mix-note-' + who).textContent = 'Set by ' + (who === 'row' ? 'Row’s' : 'Column’s') + ' payoffs. In this game it can range from ' + pct(lo) + ' to ' + pct(hi) + '.';
+  });
+  const f2 = d3.format('.2f');
+  root.querySelector('#tg-mix-vals').textContent = 'Payoffs for ranks 1 to 4. Row: 0, ' + f2(P.r2) + ', ' + f2(P.r3) + ', 1. Column: 0, ' + f2(P.c2) + ', ' + f2(P.c3) + ', 1.';
+}
+function setMix(who, t) {
+  const g = byGame.get(state.sel); if (!g || g.dominance !== 'Neither') return;
+  const ranks = pays(g)[who === 'row' ? 'r' : 'c'];
+  const [lo, hi] = mixReach(ranks, who);
+  const tt = Math.min(hi - 0.002, Math.max(lo + 0.002, t));
+  const sol = mixSolve(ranks, tt, who, who === 'row' ? [P.r2, P.r3] : [P.c2, P.c3]);
+  if (!sol) return;
+  if (who === 'row') { P.r2 = sol[0]; P.r3 = sol[1]; } else { P.c2 = sol[0]; P.c3 = sol[1]; }
+}
+const redrawDyn = (coarse) => { const g = byGame.get(state.sel); if (g && state.dview === 'dyn') drawDynamics(g, coarse); };
+let dynPending = false;
+const scheduleDyn = () => { if (dynPending) return; dynPending = true; requestAnimationFrame(() => { dynPending = false; redrawDyn(true); }); };
+slRows.forEach((row) => {
+  const k = row.dataset.k; const p = k[0]; const inp = row.querySelector('input');
+  const set = () => {
+    const v = Number(inp.value);
+    if (k[1] === '2') { P[p + '2'] = v; if (P[p + '3'] <= v) P[p + '3'] = Math.min(0.99, v + 0.01); if (P[p + '3'] <= P[p + '2']) P[p + '2'] = P[p + '3'] - 0.01; }
+    else { P[p + '3'] = v; if (P[p + '2'] >= v) P[p + '2'] = Math.max(0.01, v - 0.01); if (P[p + '2'] >= P[p + '3']) P[p + '3'] = P[p + '2'] + 0.01; }
+    if (!P.sep) { P.c2 = P.r2; P.c3 = P.r3; }
+    syncSliders();
+  };
+  inp.addEventListener('input', () => { set(); scheduleDyn(); });
+  inp.addEventListener('change', () => { set(); redrawDyn(false); });
+});
+sepEl.addEventListener('change', () => { P.sep = sepEl.checked; if (!P.sep) { P.c2 = P.r2; P.c3 = P.r3; } syncSliders(); redrawDyn(false); });
+root.querySelector('#tg-sl-reset').addEventListener('click', () => { P.r2 = P.c2 = 1 / 3; P.r3 = P.c3 = 2 / 3; syncSliders(); redrawDyn(false); });
+root.querySelectorAll('#tg-mixset .tg-sl-row').forEach((row) => {
+  const who = row.dataset.m; const inp = row.querySelector('input');
+  inp.addEventListener('input', () => { setMix(who, Number(inp.value)); syncSliders(); scheduleDyn(); });
+  inp.addEventListener('change', () => { setMix(who, Number(inp.value)); inp.blur(); syncSliders(); inp.focus(); redrawDyn(false); });
+});
+root.querySelector('#tg-dyn-sel').addEventListener('change', (e) => { P.dyn = e.target.value; redrawDyn(false); });
+const etaEl = root.querySelector('#tg-eta');
+etaEl.addEventListener('input', () => { P.eta = Number(etaEl.value); root.querySelector('#tg-eta-row output').textContent = P.eta.toFixed(2); scheduleDyn(); });
+etaEl.addEventListener('change', () => { P.eta = Number(etaEl.value); redrawDyn(false); });
+root.querySelector('#tg-sl-mode').addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b || b.dataset.v === P.mode) return;
+  P.mode = b.dataset.v; if (P.mode === 'mix') P.sep = true;
+  syncSliders(); redrawDyn(false);
+});
+syncSliders();
+root.querySelector('#tg-dview').addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b || b.dataset.v === state.dview) return;
+  state.dview = b.dataset.v; syncButtons(); drawDetail();
+});
+foldEl.addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return;
+  const f = b.dataset.v === 'fold'; if (f === state.fold) return;
+  state.fold = f; state.focus = null;
+  if (f) state.order = 'chart';
+  syncButtons(); syncCtls(); tip.hidden = true;
+  if (builtFor) { build(builtFor); builtOrder = state.order; }
+  state.sel = repId(state.sel);
+  paint(); drawDetail(); drawLegend();
+});
+searchEl.addEventListener('input', () => {
+  state.q = searchEl.value; paint();
+  mixedEl.querySelectorAll('.tg-mc').forEach((b) => { const g = byGame.get(b.dataset.go); b.hidden = !!g && !matchesQ(g); });
+});
+searchEl.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter') return;
+  const pool = state.view === 'mixed' ? [...mixedById().keys()].map((id) => byGame.get(id)).filter(Boolean) : [...byGame.values()];
+  const hit = pool.find((g) => (state.view === 'mixed' ? matchesQ(g) : matches(g)));
+  if (hit) select(state.view === 'mixed' ? hit.game : repId(hit.game), false);
+});
+
+dash.onData(() => {
+  const d = dash.data('games');
+  if (d.status === 'ok' && Array.isArray(d.data) && d.data.length) {
+    if (builtFor !== d.data || builtOrder !== state.order) {
+      byGame = new Map(d.data.map((g) => [String(g.game), g]));
+      build(d.data); builtFor = d.data; builtOrder = state.order;
+    }
+    grid.classList.remove('dash-skeleton'); grid.hidden = false; failEl.hidden = true;
+    if (state.view === 'mixed') { const mx = mixedById(); if (mx.size && !mx.has(state.sel)) state.sel = mx.has('122') ? '122' : [...mx.keys()][0]; }
+    paint(); drawDetail(); drawMixed();
+  } else {
+    builtFor = null; byGame = new Map(); cells.clear(); posMap.clear();
+    grid.replaceChildren(); grid.classList.remove('tg-ready'); tip.hidden = true;
+    const failed = d.status === 'error' || d.status === 'connect' || d.status === 'declined' || d.status === 'missing' || (d.status === 'ok');
+    grid.classList.toggle('dash-skeleton', !failed);
+    grid.hidden = failed; failEl.hidden = !failed;
+    drawDetail(); drawMixed();
+  }
+  drawLegend();
+  const s = dash.data('summary');
+  const row = s.status === 'ok' && Array.isArray(s.data) ? s.data[0] : null;
+  const fmt = d3.format(',');
+  root.querySelectorAll('[data-source="summary"]').forEach((e) => { e.textContent = row && row[e.dataset.field] != null ? fmt(row[e.dataset.field]) : '—'; });
+});
+</script>
